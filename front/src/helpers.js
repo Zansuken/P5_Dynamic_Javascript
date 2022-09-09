@@ -62,3 +62,10 @@ export const startLoading = (node, isLoading) => {
 export const finishLoading = () => {
   document.querySelector("#loader").remove();
 };
+
+// Capitalize words
+
+export const capitalize = (string) => {
+  const lowerCase = string.toLowerCase();
+  return string.charAt(0).toUpperCase() + lowerCase.slice(1);
+};

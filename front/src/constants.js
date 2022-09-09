@@ -1,4 +1,4 @@
-import { addChildren } from "./helpers.js";
+import { addChildren, capitalize } from "./helpers.js";
 // HTML Elements
 
 // Generate an anchor element
@@ -122,4 +122,31 @@ export const Paragraph = (props = { value }) => {
 };
 export const Div = document.createElement("div");
 export const htmlInput = document.createElement("input");
-export const htmlOption = document.createElement("option");
+
+// Generate option for select input
+export const Option = (props = { value, isCapitalized }) => {
+  const { value, isCapitalized } = props;
+
+  let errorMessage = "";
+
+  if (!value) {
+    errorMessage = "value is missing";
+  }
+
+  if (errorMessage) {
+    console.error(`Error: ${errorMessage}`);
+    return;
+  }
+
+  const option = document.createElement("option");
+
+  option.setAttribute("value", value);
+
+  if (isCapitalized) {
+    option.innerText = capitalize(value);
+    return option;
+  }
+
+  option.innerText = value;
+  return option;
+};

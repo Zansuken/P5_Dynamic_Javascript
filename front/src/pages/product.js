@@ -1,4 +1,4 @@
-import { Image } from "../constants.js";
+import { Image, Option } from "../constants.js";
 import { getSingleProductData } from "../helpers.js";
 
 const url = window.location.href;
@@ -14,17 +14,18 @@ if (url.includes("product")) {
   const title = document.querySelector("#title");
   const price = document.querySelector("#price");
   const description = document.querySelector("#description");
-  const colors = document.querySelector("#colors");
+  const colorsInput = document.querySelector("#colors");
 
   try {
     const product = await getSingleProductData(productId);
-    console.log(product);
+    console.log("product: ", product);
     const {
       imageUrl,
       altTxt,
       name,
       price: productPrice,
       description: productDescription,
+      colors,
     } = product;
 
     imgContainer.appendChild(Image({ src: imageUrl, alt: altTxt }));
@@ -32,7 +33,11 @@ if (url.includes("product")) {
     title.innerText = name;
     price.innerText = productPrice;
     description.innerText = productDescription;
+
+    colors.forEach((color) => {
+      colorsInput.append(Option({ value: color, isCapitalized: true }));
+    });
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
 }

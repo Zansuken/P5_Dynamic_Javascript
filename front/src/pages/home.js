@@ -27,6 +27,6 @@ if (url.includes("index")) {
     });
     finishLoading();
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
   }
 }
