@@ -1,4 +1,8 @@
 import { addChildren, capitalize } from "./helpers.js";
+
+// URL
+export const URL = window.location.href;
+
 // HTML Elements
 
 // Generate an anchor element
@@ -31,7 +35,9 @@ export const Link = (props = { href }, children) => {
 };
 
 // Generate an article element
-export const Article = (children) => {
+export const Article = (props = { classes }, children) => {
+  const { classes } = props;
+
   let errorMessage = "";
 
   if (!children) {
@@ -42,6 +48,11 @@ export const Article = (children) => {
     return;
   }
   const article = document.createElement("article");
+
+  if (classes) {
+    article.classList.add(classes);
+  }
+
   addChildren(article, children);
   return article;
 };
@@ -100,8 +111,8 @@ export const Title = (props = { type, value }) => {
 };
 
 // Generate a paragraph element
-export const Paragraph = (props = { value }) => {
-  const { value } = props;
+export const Paragraph = (props = { id, type, value, classes }) => {
+  const { id, type, value, classes } = props;
 
   let errorMessage = "";
 
@@ -118,10 +129,90 @@ export const Paragraph = (props = { value }) => {
 
   p.innerText = value;
 
+  if (id) {
+    p.setAttribute("id", id);
+  }
+
+  if (type === "error") {
+    p.classList.add("errorStyle");
+  }
+
+  if (classes) {
+    p.classList.add(classes);
+  }
+
   return p;
 };
-export const Div = document.createElement("div");
-export const htmlInput = document.createElement("input");
+
+// Generate a div
+export const Div = (props = { classes }, children) => {
+  const { classes } = props;
+
+  let errorMessage = "";
+
+  if (!children) {
+    errorMessage = "a div cannot be self closing";
+  }
+  if (errorMessage) {
+    console.error(`Error: ${errorMessage}`);
+    return;
+  }
+  const div = document.createElement("div");
+  if (!classes) {
+    div.classList.add("divStyle");
+  }
+  if (classes) {
+    div.classList.add(classes);
+  }
+  addChildren(div, children);
+  return div;
+};
+
+// Generate an input
+export const Input = (
+  props = { type, name, min, max, value, isCapitalized, classes }
+) => {
+  const { type, name, min, max, value, isCapitalized, classes } = props;
+
+  let errorMessage = "";
+
+  if (!type || typeof type !== "string") {
+    errorMessage = "input type is missing or is not a string";
+  }
+
+  if (!name || typeof name !== "string") {
+    errorMessage = "input name is missing or is not a string";
+  }
+
+  if (errorMessage) {
+    console.error(`Error: ${errorMessage}`);
+    return;
+  }
+
+  const input = document.createElement("input");
+
+  input.setAttribute("type", type);
+  input.setAttribute("name", name);
+
+  if (min) {
+    input.setAttribute("min", min);
+  }
+  if (max) {
+    input.setAttribute("max", max);
+  }
+
+  if (isCapitalized) {
+    input.innerText = capitalize(value);
+    return input;
+  }
+
+  if (classes) {
+    input.classList.add(classes);
+  }
+
+  input.innerText = value;
+  return input;
+};
 
 // Generate option for select input
 export const Option = (props = { value, isCapitalized }) => {

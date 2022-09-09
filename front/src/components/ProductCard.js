@@ -1,7 +1,7 @@
 import { Article, Image, Link, Paragraph, Title } from "../constants.js";
 
 const ProductCard = (props = { data, alt, href, img, name, description }) => {
-  const { data, alt, href, img, name, description } = props;
+  const { alt, href, img, name, description } = props;
 
   const image = Image({
     src: img,

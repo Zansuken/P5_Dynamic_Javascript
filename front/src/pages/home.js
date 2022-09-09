@@ -1,9 +1,8 @@
 import ProductCard from "../components/ProductCard.js";
+import { URL } from "../constants.js";
 import { finishLoading, getProductsData, startLoading } from "../helpers.js";
 
-const url = window.location.href;
-
-if (url.includes("index")) {
+if (URL.includes("index")) {
   const productsContainer = document.querySelector("#items");
   try {
     startLoading(productsContainer, true);

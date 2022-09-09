@@ -1,3 +1,5 @@
+import { Paragraph } from "./constants.js";
+
 // Fetch products
 export const getProductsData = async () => {
   const response = await fetch("http://localhost:3000/api/products");
@@ -14,6 +16,38 @@ export const getSingleProductData = async (id) => {
   return product;
 };
 
+// Local storage
+
+// Get local storage
+export const getLocalStorage = (key) => {
+  const storage = window.localStorage.getItem(key);
+  return JSON.parse(storage);
+};
+
+// Add a single item to local storage
+export const addToLocalStorage = (key, value) => {
+  if (!getLocalStorage(key)) {
+    const productList = [];
+    productList.push(value);
+    const convertedValue = JSON.stringify(productList);
+    console.log(convertedValue);
+    window.localStorage.setItem(key, convertedValue);
+  } else {
+    const currentState = JSON.parse(getLocalStorage(key));
+    const productList = [...currentState];
+    productList.push(value);
+    const convertedValue = JSON.stringify(productList);
+    window.localStorage.setItem(key, convertedValue);
+  }
+};
+
+// Remove a single item to local storage
+export const removeFromLocalStorage = (key) =>
+  window.localStorage.removeItem(key);
+
+// Clear local storage
+export const clearLocalStorage = () => window.localStorage.clear();
+
 // Concatenate children nodes
 export const addChildren = (node, children) => {
   Object.keys(children).forEach((key) => {
@@ -27,11 +61,7 @@ export const startLoading = (node, isLoading) => {
 
   loader.setAttribute("id", "loader");
 
-  loader.style.border = "16px solid #f3f3f3";
-  loader.style.borderTop = "16px solid #3498db";
-  loader.style.borderRadius = "50%";
-  loader.style.width = "120px";
-  loader.style.height = "120px";
+  loader.classList.add("loadingSpinner");
 
   const loaderAnimation = [
     {
@@ -64,8 +94,69 @@ export const finishLoading = () => {
 };
 
 // Capitalize words
-
 export const capitalize = (string) => {
   const lowerCase = string.toLowerCase();
   return string.charAt(0).toUpperCase() + lowerCase.slice(1);
+};
+
+// Generate error message
+export const errorMessageGenerator = (props = { node, id, type, value }) => {
+  const { node, id, type, value } = props;
+
+  const errorElement = Paragraph({
+    id,
+    type,
+    value,
+  });
+
+  node.after(errorElement);
+};
+
+// Remove error message
+export const removeErrorMessage = (id) => {
+  const displayedError = document.querySelector(`#${id}`);
+  if (displayedError) {
+    displayedError.remove();
+  }
+};
+
+// Animate error message
+export const animateErrorMessage = (id) => {
+  if (document.getElementById(id)) {
+    const element = document.getElementById(id);
+
+    const animation = [
+      {
+        transform: "translateX(0px)",
+      },
+      {
+        transform: "translateX(5px)",
+      },
+      {
+        transform: "translateX(-5px)",
+      },
+      {
+        transform: "translateX(4px)",
+      },
+      {
+        transform: "translateX(-4px)",
+      },
+      {
+        transform: "translateX(2px)",
+      },
+      {
+        transform: "translateX(-2px)",
+      },
+      {
+        transform: "translateX(0px)",
+      },
+    ];
+
+    const timing = {
+      duration: 500,
+      iteration: 1,
+    };
+
+    element.animate(animation, timing);
+  }
 };
