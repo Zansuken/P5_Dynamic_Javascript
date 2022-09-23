@@ -12,7 +12,7 @@ const ProductCard = (props = { data, alt, href, img, name, description }) => {
 
   const p = Paragraph({ value: description });
 
-  const article = Article({ image, h3, p });
+  const article = Article({}, { image, h3, p });
 
   if (href) {
     const a = Link({ href });
