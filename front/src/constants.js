@@ -201,7 +201,7 @@ export const Input = (
     input.setAttribute("max", max);
   }
 
-  if (isCapitalized) {
+  if (isCapitalized && type !== "number") {
     input.innerText = capitalize(value);
     return input;
   }
@@ -210,7 +210,12 @@ export const Input = (
     input.classList.add(classes);
   }
 
-  input.innerText = value;
+  if (type === "number" && value) {
+    input.setAttribute("value", value);
+  } else {
+    input.innerText = value;
+  }
+
   return input;
 };
 
@@ -240,4 +245,13 @@ export const Option = (props = { value, isCapitalized }) => {
 
   option.innerText = value;
   return option;
+};
+
+// Generate an information snackbar
+export const SnackBar = (message, type) => {
+  const container = Div({}, {});
+
+  container.setAttribute("id", "snackbar");
+
+  return snackbar;
 };

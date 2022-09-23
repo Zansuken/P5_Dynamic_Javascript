@@ -30,7 +30,6 @@ if (URL.includes("product")) {
 
   try {
     const product = await getSingleProductData(productId);
-    console.log("product: ", product);
     const {
       imageUrl,
       altTxt,

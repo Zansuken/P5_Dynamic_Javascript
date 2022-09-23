@@ -1,7 +1,8 @@
 import { Article, Div, Image, Input, Paragraph, Title } from "../constants.js";
+import { getSingleProductData } from "../helpers.js";
 
-const CartItem = (props = { classes, relatedItem }) => {
-  const { classes, relatedItem } = props;
+const CartItem = (props = { classes }) => {
+  const { classes, itemId, itemColor, itemQuantity, products } = props;
   const {
     root,
     image: imageClass,
@@ -14,16 +15,54 @@ const CartItem = (props = { classes, relatedItem }) => {
     deleteButton,
   } = classes;
 
-  const {
-    id,
-    color: itemColor,
-    quantity: itemQuantity,
-    name,
-    price: itemPrice,
-  } = relatedItem;
+  const relatedItem = products.filter((product) => product._id === itemId)[0];
 
-  console.log(props);
+  const { name, price: itemPrice } = relatedItem;
 
+  // Quantity container
+  const quantity = Paragraph({ value: `Qté: ${itemQuantity}` });
+  const input = Input({
+    type: "number",
+    name: "itemQuantity",
+    min: 1,
+    max: 100,
+    value: itemQuantity,
+    isCapitalized: true,
+    classes: quantityClass,
+  });
+  const itemQuantityContainer = Div(
+    { classes: settingsQuantity },
+    { quantity, input }
+  );
+  console.log("input node: ", input);
+  // Delete button container
+  const deleteLabel = Paragraph({ classes: deleteButton, value: "Remove" });
+
+  const itemDeleteContainer = Div({ classes: settingsDelete }, { deleteLabel });
+
+  // Setting container
+  const itemSettingsContainer = Div(
+    { classes: settings },
+    { itemQuantityContainer, itemDeleteContainer }
+  );
+
+  // Description container
+  const productName = Title({ type: 2, value: name });
+  const color = Paragraph({ value: itemColor });
+  const price = Paragraph({ value: `${itemPrice},00 €` });
+
+  const itemDescriptionContainer = Div(
+    { classes: description },
+    { productName, color, price }
+  );
+
+  // Content container
+  const itemContentContainer = Div(
+    { classes: content },
+    { itemDescriptionContainer, itemSettingsContainer }
+  );
+
+  // Image container
   const image = Image({
     src: relatedItem.imageUrl,
     alt: relatedItem.altTxt,
@@ -31,42 +70,12 @@ const CartItem = (props = { classes, relatedItem }) => {
 
   const itemImageContainer = Div({ classes: imageClass }, { image });
 
-  const itemContentContainer = Div({ classes: content });
-
-  const itemSettingsContainer = Div({ classes: settings });
-
-  const itemQuantityContainer = Div({ classes: settingsQuantity });
-
-  const itemDeleteContainer = Div({ classes: settingsDelete });
-
-  const productName = Title({ type: 2, value: name });
-  const color = Paragraph({ value: itemColor });
-  const price = Paragraph({ value: itemPrice });
-
-  const itemDescriptionContainer = Div(
-    { classes: description },
-    { productName, color, price }
-  );
-  console.log("itemDescriptionContainer: ", itemDescriptionContainer);
-
-  const quantity = Paragraph();
-  const deleteLabel = Paragraph({ classes: deleteButton });
-
-  const input = Input({
-    type: "number",
-    name: "itemQuantity",
-    min: 1,
-    max: 100,
-    value,
-    isCapitalized: true,
-    classes: quantityClass,
-  });
-
+  // Final Article
   const cartItem = Article(
     {
       classes: root,
     },
-    { itemImageContainer }
+    { itemImageContainer, itemContentContainer }
   );
 
   return cartItem;

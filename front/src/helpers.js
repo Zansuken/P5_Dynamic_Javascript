@@ -30,10 +30,9 @@ export const addToLocalStorage = (key, value) => {
     const productList = [];
     productList.push(value);
     const convertedValue = JSON.stringify(productList);
-    console.log(convertedValue);
     window.localStorage.setItem(key, convertedValue);
   } else {
-    const currentState = JSON.parse(getLocalStorage(key));
+    const currentState = getLocalStorage(key);
     const productList = [...currentState];
     productList.push(value);
     const convertedValue = JSON.stringify(productList);
