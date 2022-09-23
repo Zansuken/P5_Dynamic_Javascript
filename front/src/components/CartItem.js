@@ -1,5 +1,4 @@
 import { Article, Div, Image, Input, Paragraph, Title } from "../constants.js";
-import { getSingleProductData } from "../helpers.js";
 
 const CartItem = (props = { classes }) => {
   const { classes, itemId, itemColor, itemQuantity, products } = props;

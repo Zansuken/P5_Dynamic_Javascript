@@ -1,4 +1,4 @@
-import { Image, Option, URL } from "../constants.js";
+import { Image, Option, SnackBar, URL } from "../constants.js";
 import {
   addToLocalStorage,
   animateErrorMessage,
@@ -107,6 +107,7 @@ if (URL.includes("product")) {
         }
         return;
       }
+      SnackBar("Item added to your cart!", "success");
       addToLocalStorage("cart", dataToSave);
     });
   } catch (error) {

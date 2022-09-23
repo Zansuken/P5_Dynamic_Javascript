@@ -1,4 +1,4 @@
-import { addChildren, capitalize } from "./helpers.js";
+import { addChildren, animateSnackbar, capitalize } from "./helpers.js";
 
 // URL
 export const URL = window.location.href;
@@ -249,9 +249,93 @@ export const Option = (props = { value, isCapitalized }) => {
 
 // Generate an information snackbar
 export const SnackBar = (message, type) => {
-  const container = Div({}, {});
+  const page = document.querySelector("body");
 
-  container.setAttribute("id", "snackbar");
+  const displayedMessage = Paragraph({ value: message });
 
-  return snackbar;
+  const snackbar = Div({ classes: "snackbar" }, { displayedMessage });
+
+  snackbar.setAttribute("id", "snackbar");
+
+  if (type === "success") {
+    snackbar.classList.add("snackbarSuccess");
+  }
+
+  page.append(snackbar);
+  animateSnackbar("snackbar");
+};
+
+export const CartStateIcon = (quantity) => {
+  const page = document.querySelector("body");
+  const displayedQuantity = Paragraph({ value: quantity });
+  const bagIcon = Image({ src: "../images/icons/bag.svg", alt: "bag icon" });
+
+  const container = Div(
+    { classes: "cartState" },
+    { displayedQuantity, bagIcon }
+  );
+
+  container.setAttribute("id", "cartState");
+
+  page.append(container);
+};
+
+export const CartStateDetails = (cart, products) => {
+  const page = document.querySelector("body");
+  const list = document.createElement("ul");
+  const lastLine = document.createElement("li");
+  const closeButton = document.createElement("button");
+
+  closeButton.setAttribute("id", "closeDetailsButton");
+  closeButton.classList.add("closeDetailsButton");
+
+  closeButton.textContent = "X";
+
+  let totalQuantity = 0;
+  let totalPrice = 0;
+
+  // console.log(cart);
+  cart.forEach((element) => {
+    const { id, color, quantity } = element;
+
+    totalQuantity = totalQuantity + Number(quantity);
+
+    const associatedElement = products.filter(
+      (product) => product._id === id
+    )[0];
+
+    const { name, price } = associatedElement;
+
+    totalPrice = totalPrice + Number(price);
+
+    const lineContent = `x${quantity} ${name} (${color}): ${
+      price * quantity
+    },00 €`;
+
+    const line = document.createElement("li");
+    line.textContent = lineContent;
+
+    list.append(line);
+  });
+
+  const lineTotal = `${totalQuantity} articles pour ${totalPrice},00 €`;
+
+  lastLine.textContent = lineTotal;
+
+  list.append(lastLine);
+
+  console.log(list);
+
+  const container = Div({ classes: "cartStateDetails" }, { list, closeButton });
+
+  container.setAttribute("id", "cartStateDetails");
+
+  page.append(container);
+
+  closeButton.addEventListener("click", () => {
+    if (cart) {
+      container.remove();
+      CartStateIcon(cart.length);
+    }
+  });
 };

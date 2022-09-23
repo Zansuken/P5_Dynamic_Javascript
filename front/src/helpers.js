@@ -159,3 +159,63 @@ export const animateErrorMessage = (id) => {
     element.animate(animation, timing);
   }
 };
+
+// Animate snackbar
+export const animateSnackbar = (id) => {
+  const element = document.getElementById(id);
+
+  const animation = [
+    {
+      bottom: "-30px",
+      opacity: 0,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "15px",
+      opacity: 1,
+    },
+    {
+      bottom: "-30px",
+      opacity: 0,
+    },
+  ];
+
+  const timing = {
+    duration: 5000,
+    iteration: 1,
+  };
+
+  element.animate(animation, timing);
+  setTimeout(function () {
+    if (element) {
+      element.remove();
+    }
+  }, 5000);
+};
