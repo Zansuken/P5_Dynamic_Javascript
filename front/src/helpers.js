@@ -219,3 +219,29 @@ export const animateSnackbar = (id) => {
     }
   }, 5000);
 };
+
+// Format number to €
+export const formatToEuro = (number) =>
+  Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  }).format(number);
+
+export const cartStateSwitch = ({
+  elementToHide,
+  elementToShow,
+  elementGenerator,
+  cart,
+  products,
+  isDefaultState,
+}) => {
+  elementToHide?.addEventListener("click", () => {
+    elementToHide?.classList.add("hide");
+    if (isDefaultState) {
+      elementGenerator(cart, products);
+    } else {
+      elementGenerator(cart.length, cart, products);
+    }
+    elementToShow?.classList.add("show");
+  });
+};
