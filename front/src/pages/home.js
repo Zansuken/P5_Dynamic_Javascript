@@ -1,3 +1,4 @@
+import { updateCartIcon } from "../components/CartState.js";
 import ProductCard from "../components/ProductCard.js";
 import { URL } from "../constants.js";
 import { finishLoading, getProductsData, startLoading } from "../helpers.js";
@@ -5,6 +6,8 @@ import { finishLoading, getProductsData, startLoading } from "../helpers.js";
 if (URL.includes("index")) {
   const productsContainer = document.querySelector("#items");
   try {
+    updateCartIcon();
+
     startLoading(productsContainer, true);
 
     const products = await getProductsData();

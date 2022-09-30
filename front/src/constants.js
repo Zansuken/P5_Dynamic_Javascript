@@ -1,4 +1,9 @@
-import { addChildren, animateSnackbar, capitalize } from "./helpers.js";
+import {
+  addChildren,
+  animateSnackbar,
+  capitalize,
+  formatToEuro,
+} from "./helpers.js";
 
 // URL
 export const URL = window.location.href;
@@ -266,6 +271,11 @@ export const SnackBar = (message, type) => {
 };
 
 export const CartStateIcon = (quantity) => {
+  const currentCartStateIcon = document.querySelector("#cartState");
+
+  if (currentCartStateIcon) {
+    currentCartStateIcon.remove();
+  }
   const page = document.querySelector("body");
   const displayedQuantity = Paragraph({ value: quantity });
   const bagIcon = Image({ src: "../images/icons/bag.svg", alt: "bag icon" });
@@ -281,10 +291,17 @@ export const CartStateIcon = (quantity) => {
 };
 
 export const CartStateDetails = (cart, products) => {
+  const currentCartStateDetails = document.querySelector("#cartStateDetails");
+
+  if (currentCartStateDetails) {
+    currentCartStateDetails.remove();
+  }
+
   const page = document.querySelector("body");
   const list = document.createElement("ul");
   const lastLine = document.createElement("li");
   const closeButton = document.createElement("button");
+  const cartStateElement = document.querySelector("#cartState");
 
   closeButton.setAttribute("id", "closeDetailsButton");
   closeButton.classList.add("closeDetailsButton");
@@ -294,7 +311,6 @@ export const CartStateDetails = (cart, products) => {
   let totalQuantity = 0;
   let totalPrice = 0;
 
-  // console.log(cart);
   cart.forEach((element) => {
     const { id, color, quantity } = element;
 
@@ -306,11 +322,11 @@ export const CartStateDetails = (cart, products) => {
 
     const { name, price } = associatedElement;
 
-    totalPrice = totalPrice + Number(price);
+    totalPrice = totalPrice + Number(price) * quantity;
 
-    const lineContent = `x${quantity} ${name} (${color}): ${
+    const lineContent = `x${quantity} ${name} (${color}): ${formatToEuro(
       price * quantity
-    },00 €`;
+    )}`;
 
     const line = document.createElement("li");
     line.textContent = lineContent;
@@ -318,24 +334,23 @@ export const CartStateDetails = (cart, products) => {
     list.append(line);
   });
 
-  const lineTotal = `${totalQuantity} articles pour ${totalPrice},00 €`;
+  const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
+    totalPrice
+  )}`;
 
   lastLine.textContent = lineTotal;
 
   list.append(lastLine);
-
-  console.log(list);
 
   const container = Div({ classes: "cartStateDetails" }, { list, closeButton });
 
   container.setAttribute("id", "cartStateDetails");
 
   page.append(container);
-
+  container.classList.add("show");
   closeButton.addEventListener("click", () => {
-    if (cart) {
-      container.remove();
-      CartStateIcon(cart.length);
-    }
+    container.classList.remove("show");
+    cartStateElement?.classList.remove("hide");
+    cartStateElement?.classList.add("show");
   });
 };

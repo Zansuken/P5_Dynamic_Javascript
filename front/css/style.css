@@ -235,6 +235,17 @@ footer .footerSecondary {
   margin: 0;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    right: -100px;
+  }
+  100% {
+    opacity: 1;
+    right: 15px;
+  }
+}
+
 .cartState {
   position: fixed;
   top: 15px;
@@ -247,6 +258,8 @@ footer .footerSecondary {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 0.3s;
 }
 
 .cartState img {
@@ -273,9 +286,11 @@ footer .footerSecondary {
   height: fit-content;
   background-color: var(--secondary-color);
   border-radius: 7px;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 0.3s;
 }
 
 .cartStateDetails ul {
@@ -306,6 +321,14 @@ footer .footerSecondary {
   right: -7.5px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.show {
+  display: flex;
+}
+
+.hide {
+  display: none;
 }
 
 .divStyle {

@@ -1,3 +1,4 @@
+import { updateCartIcon } from "../components/CartState.js";
 import { Image, Option, SnackBar, URL } from "../constants.js";
 import {
   addToLocalStorage,
@@ -30,6 +31,8 @@ if (URL.includes("product")) {
 
   try {
     const product = await getSingleProductData(productId);
+    updateCartIcon();
+
     const {
       imageUrl,
       altTxt,
@@ -109,6 +112,7 @@ if (URL.includes("product")) {
       }
       SnackBar("Item added to your cart!", "success");
       addToLocalStorage("cart", dataToSave);
+      updateCartIcon();
     });
   } catch (error) {
     console.error(error);
