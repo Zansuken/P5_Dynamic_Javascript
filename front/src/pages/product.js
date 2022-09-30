@@ -112,6 +112,8 @@ if (URL.includes("product")) {
       }
       SnackBar("Item added to your cart!", "success");
       addToLocalStorage("cart", dataToSave);
+      const resetCartDetails = document.querySelector("#cartStateDetails");
+      resetCartDetails?.remove();
       updateCartIcon();
     });
   } catch (error) {

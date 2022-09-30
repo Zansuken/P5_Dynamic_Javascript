@@ -33,7 +33,6 @@ const CartItem = (props = { classes }) => {
     { classes: settingsQuantity },
     { quantity, input }
   );
-  console.log("input node: ", input);
   // Delete button container
   const deleteLabel = Paragraph({ classes: deleteButton, value: "Remove" });
 

@@ -272,10 +272,7 @@ export const SnackBar = (message, type) => {
 
 export const CartStateIcon = (quantity) => {
   const currentCartStateIcon = document.querySelector("#cartState");
-
-  if (currentCartStateIcon) {
-    currentCartStateIcon.remove();
-  }
+  currentCartStateIcon?.remove();
   const page = document.querySelector("body");
   const displayedQuantity = Paragraph({ value: quantity });
   const bagIcon = Image({ src: "../images/icons/bag.svg", alt: "bag icon" });
@@ -292,10 +289,7 @@ export const CartStateIcon = (quantity) => {
 
 export const CartStateDetails = (cart, products) => {
   const currentCartStateDetails = document.querySelector("#cartStateDetails");
-
-  if (currentCartStateDetails) {
-    currentCartStateDetails.remove();
-  }
+  currentCartStateDetails?.remove();
 
   const page = document.querySelector("body");
   const list = document.createElement("ul");

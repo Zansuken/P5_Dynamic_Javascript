@@ -10,29 +10,31 @@ export const updateCartIcon = async () => {
     try {
       const products = await getProductsData();
       const cart = getLocalStorage("cart");
-      CartStateIcon(cart.length, cart, products);
+      if (cart) {
+        CartStateIcon(cart.length, cart, products);
 
-      const cartStateElement = document.querySelector("#cartState");
-      const cartStateDetailsElement =
-        document.querySelector("#cartStateDetails");
+        const cartStateElement = document.querySelector("#cartState");
+        const cartStateDetailsElement =
+          document.querySelector("#cartStateDetails");
 
-      cartStateSwitch({
-        elementToHide: cartStateElement,
-        elementToShow: cartStateDetailsElement,
-        elementGenerator: CartStateDetails,
-        cart: cart,
-        products: products,
-        isDefaultState: true,
-      });
+        cartStateSwitch({
+          elementToHide: cartStateElement,
+          elementToShow: cartStateDetailsElement,
+          elementGenerator: CartStateDetails,
+          cart: cart,
+          products: products,
+          isDefaultState: true,
+        });
 
-      cartStateSwitch({
-        elementToHide: cartStateDetailsElement,
-        elementToShow: cartStateElement,
-        elementGenerator: CartStateIcon,
-        cart: cart,
-        products: products,
-        isDefaultState: false,
-      });
+        cartStateSwitch({
+          elementToHide: cartStateDetailsElement,
+          elementToShow: cartStateElement,
+          elementGenerator: CartStateIcon,
+          cart: cart,
+          products: products,
+          isDefaultState: false,
+        });
+      }
     } catch (error) {
       console.error(error.message);
     }

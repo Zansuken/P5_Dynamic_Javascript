@@ -34,7 +34,37 @@ export const addToLocalStorage = (key, value) => {
   } else {
     const currentState = getLocalStorage(key);
     const productList = [...currentState];
-    productList.push(value);
+
+    const { id, color, quantity } = value;
+
+    const productToUpdate = productList.filter(
+      (product) => product.id === id && product.color === color
+    );
+
+    let currentProduct = {
+      id,
+      color,
+      quantity,
+    };
+
+    if (productToUpdate[0]) {
+      productList.map((product, index) => {
+        if (
+          product.id === productToUpdate[0].id &&
+          product.color === productToUpdate[0].color
+        ) {
+          currentProduct = {
+            ...productToUpdate[0],
+            quantity: (
+              Number(productToUpdate[0].quantity) + Number(value.quantity)
+            ).toString(),
+          };
+          productList.splice(index, 1, currentProduct);
+        }
+      });
+    } else {
+      productList.push(value);
+    }
     const convertedValue = JSON.stringify(productList);
     window.localStorage.setItem(key, convertedValue);
   }
