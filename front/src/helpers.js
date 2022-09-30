@@ -71,8 +71,30 @@ export const addToLocalStorage = (key, value) => {
 };
 
 // Remove a single item to local storage
-export const removeFromLocalStorage = (key) =>
-  window.localStorage.removeItem(key);
+export const removeFromLocalStorage = (key, elementToRemove) => {
+  if (getLocalStorage(key)) {
+    const productList = getLocalStorage(key);
+
+    const { id, color } = elementToRemove;
+
+    const productToRemove = productList.filter(
+      (product) => product.id === id && product.color === color
+    );
+
+    if (productToRemove[0]) {
+      console.log(productToRemove[0]);
+      productList.map((product, index) => {
+        if (
+          product.id === productToRemove[0].id &&
+          product.color === productToRemove[0].color
+        ) {
+          productList.splice(index, 1);
+        }
+      });
+      window.localStorage.setItem(key, JSON.stringify(productList));
+    }
+  }
+};
 
 // Clear local storage
 export const clearLocalStorage = () => window.localStorage.clear();

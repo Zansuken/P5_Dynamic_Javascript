@@ -1,4 +1,10 @@
 import { Article, Div, Image, Input, Paragraph, Title } from "../constants.js";
+import {
+  clearLocalStorage,
+  getLocalStorage,
+  removeFromLocalStorage,
+} from "../helpers.js";
+import CartList from "./CartList.js";
 
 const CartItem = (props = { classes }) => {
   const { classes, itemId, itemColor, itemQuantity, products } = props;
@@ -35,6 +41,36 @@ const CartItem = (props = { classes }) => {
   );
   // Delete button container
   const deleteLabel = Paragraph({ classes: deleteButton, value: "Remove" });
+
+  deleteLabel.setAttribute(
+    "data-related-product",
+    JSON.stringify({
+      itemId,
+      itemColor,
+    })
+  );
+
+  deleteLabel.addEventListener("click", (event) => {
+    const data = JSON.parse(event.target.dataset.relatedProduct);
+    removeFromLocalStorage("cart", { id: data.itemId, color: itemColor });
+    const cart = getLocalStorage("cart");
+    const cartContainer = document.querySelector("#cart__items");
+    const nodeList = cartContainer.children.item;
+    console.log(nodeList);
+    nodeList.map((node) => {
+      console.log(node);
+    });
+
+    if (cart) {
+      console.log(cart);
+      if (cart.length === 0) {
+        clearLocalStorage();
+        // cartContainer.remove();
+      }
+
+      // CartList({ cart, products });
+    }
+  });
 
   const itemDeleteContainer = Div({ classes: settingsDelete }, { deleteLabel });
 
@@ -74,6 +110,14 @@ const CartItem = (props = { classes }) => {
       classes: root,
     },
     { itemImageContainer, itemContentContainer }
+  );
+
+  cartItem.setAttribute(
+    "data-related-product",
+    JSON.stringify({
+      itemId,
+      itemColor,
+    })
   );
 
   return cartItem;
