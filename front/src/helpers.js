@@ -82,7 +82,6 @@ export const removeFromLocalStorage = (key, elementToRemove) => {
     );
 
     if (productToRemove[0]) {
-      console.log(productToRemove[0]);
       productList.map((product, index) => {
         if (
           product.id === productToRemove[0].id &&
