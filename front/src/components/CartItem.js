@@ -55,20 +55,17 @@ const CartItem = (props = { classes }) => {
     removeFromLocalStorage("cart", { id: data.itemId, color: itemColor });
     const cart = getLocalStorage("cart");
     const cartContainer = document.querySelector("#cart__items");
-    const nodeList = cartContainer.children.item;
-    console.log(nodeList);
-    nodeList.map((node) => {
-      console.log(node);
-    });
+    const node =
+      event.target.parentElement.parentElement.parentElement.parentElement;
 
+    if (node) {
+      node.remove();
+    }
     if (cart) {
-      console.log(cart);
       if (cart.length === 0) {
         clearLocalStorage();
-        // cartContainer.remove();
+        cartContainer.remove();
       }
-
-      // CartList({ cart, products });
     }
   });
 
