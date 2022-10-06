@@ -95,6 +95,36 @@ export const removeFromLocalStorage = (key, elementToRemove) => {
   }
 };
 
+// Change number of item
+export const updateSingleItem = (key, elementToUpdate) => {
+  if (getLocalStorage(key)) {
+    const productList = getLocalStorage(key);
+
+    const { id, color, quantity, price } = elementToUpdate;
+
+    const productToUpdate = productList.filter(
+      (product) => product.id === id && product.color === color
+    );
+
+    if (productToUpdate[0]) {
+      productList.map((product, index) => {
+        if (
+          product.id === productToUpdate[0].id &&
+          product.color === productToUpdate[0].color
+        ) {
+          const updatedProduct = {
+            ...productToUpdate[0],
+            quantity,
+            totalPrice: quantity * price,
+          };
+          productList.splice(index, 1, updatedProduct);
+        }
+      });
+      window.localStorage.setItem(key, JSON.stringify(productList));
+    }
+  }
+};
+
 // Clear local storage
 export const clearLocalStorage = () => window.localStorage.clear();
 

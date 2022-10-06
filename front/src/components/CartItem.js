@@ -3,10 +3,19 @@ import {
   clearLocalStorage,
   getLocalStorage,
   removeFromLocalStorage,
+  updateSingleItem,
 } from "../helpers.js";
 
 const CartItem = (props = { classes }) => {
-  const { classes, itemId, itemColor, itemQuantity, products } = props;
+  const {
+    classes,
+    itemId,
+    itemColor,
+    itemQuantity,
+    itemPrice: productPrice,
+    products,
+    cart,
+  } = props;
   const {
     root,
     image: imageClass,
@@ -23,6 +32,18 @@ const CartItem = (props = { classes }) => {
 
   const { name, price: itemPrice } = relatedItem;
 
+  // Total price & total quantity update
+  let globalTotalPrice = 0;
+  let globalTotalQuantity = 0;
+
+  cart?.forEach((item) => {
+    if (item.id) {
+      globalTotalPrice =
+        Number(globalTotalPrice) + Number(item.price) * Number(item.quantity);
+      globalTotalQuantity = Number(globalTotalQuantity) + Number(item.quantity);
+    }
+  });
+
   // Quantity container
   const quantity = Paragraph({ value: `Qté: ${itemQuantity}` });
   const input = Input({
@@ -33,6 +54,29 @@ const CartItem = (props = { classes }) => {
     value: itemQuantity,
     isCapitalized: true,
     classes: quantityClass,
+  });
+
+  input.setAttribute(
+    "data-related-product",
+    JSON.stringify({
+      itemId,
+      itemColor,
+      itemQuantity,
+    })
+  );
+
+  input.addEventListener("change", (event) => {
+    const data = JSON.parse(event.target.dataset.relatedProduct);
+    const displayedQuantityNode = event.target.previousSibling;
+    const totalPriceNode = document.getElementById(`${itemId}-${itemColor}`);
+    displayedQuantityNode.innerText = `Qté: ${event.target.value}`;
+    totalPriceNode.innerText = `${productPrice * event.target.value},00 €`;
+    updateSingleItem("cart", {
+      id: data.itemId,
+      color: data.itemColor,
+      quantity: event.target.value,
+      price: productPrice,
+    });
   });
   const itemQuantityContainer = Div(
     { classes: settingsQuantity },
@@ -80,6 +124,12 @@ const CartItem = (props = { classes }) => {
   const productName = Title({ type: 2, value: name });
   const color = Paragraph({ value: itemColor });
   const price = Paragraph({ value: `${itemPrice},00 €` });
+
+  price.setAttribute("id", `${itemId}-${itemColor}`);
+  price.setAttribute(
+    "onload",
+    (price.innerText = `${productPrice * itemQuantity},00 €`)
+  );
 
   const itemDescriptionContainer = Div(
     { classes: description },

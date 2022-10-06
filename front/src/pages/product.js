@@ -46,6 +46,7 @@ if (URL.includes("product")) {
       id: productId,
       color: "",
       quantity: "",
+      price: productPrice,
     };
 
     let isValid;
@@ -91,7 +92,10 @@ if (URL.includes("product")) {
       }
       if (event.target.value && event.target.value >= 1) {
         removeErrorMessage("quantityError");
-        dataToSave = { ...dataToSave, quantity: event.target.value };
+        dataToSave = {
+          ...dataToSave,
+          quantity: event.target.value,
+        };
         isValid = dataToSave.color && true;
       }
     });
@@ -111,7 +115,11 @@ if (URL.includes("product")) {
         return;
       }
       SnackBar("Item added to your cart!", "success");
-      addToLocalStorage("cart", dataToSave);
+      const { price, quantity } = dataToSave;
+      addToLocalStorage("cart", {
+        ...dataToSave,
+        totalPrice: price * quantity,
+      });
       const resetCartDetails = document.querySelector("#cartStateDetails");
       resetCartDetails?.remove();
       updateCartIcon();
