@@ -48,9 +48,6 @@ if (URL.includes("product")) {
       price: productPrice,
     };
 
-    // eslint-disable-next-line
-    let isValid;
-
     imgContainerNode().appendChild(Image({ src: imageUrl, alt: altTxt }));
 
     titleNode().innerText = name;
@@ -70,12 +67,10 @@ if (URL.includes("product")) {
           type: "error",
           value: "La sélection d'une couleur est obligatoire",
         });
-        isValid = false;
       }
       if (event.target.value) {
         removeErrorMessage("colorError");
         dataToSave = { ...dataToSave, color: event.target.value };
-        isValid = dataToSave.quantity && true;
       }
     });
 
@@ -88,7 +83,6 @@ if (URL.includes("product")) {
           type: "error",
           value: "Le nombre de produit à ajouter est manquant ou incorrect",
         });
-        isValid = false;
       }
       if (event.target.value && event.target.value >= 1) {
         removeErrorMessage("quantityError");
@@ -96,7 +90,6 @@ if (URL.includes("product")) {
           ...dataToSave,
           quantity: event.target.value,
         };
-        isValid = dataToSave.color && true;
       }
     });
 
