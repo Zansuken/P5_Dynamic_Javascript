@@ -326,3 +326,21 @@ export const cartStateSwitch = ({
     elementToShow?.classList.add("show");
   });
 };
+
+// Update totalPrice and totalQuantity displayed values
+export const updateTotalPriceQuantityDisplayed = () => {
+  const globalTotalPriceNode = document.querySelector("#totalPrice");
+  const globalTotalQuantityNode = document.querySelector("#totalQuantity");
+  const updatedCart = getLocalStorage("cart");
+
+  let newTotalQuantity = 0;
+  let newTotalPrice = 0;
+
+  updatedCart?.forEach((item) => {
+    newTotalQuantity = Number(newTotalQuantity) + Number(item.quantity);
+    newTotalPrice = Number(newTotalPrice) + Number(item.totalPrice);
+  });
+
+  globalTotalQuantityNode.innerText = newTotalQuantity;
+  globalTotalPriceNode.innerText = newTotalPrice;
+};
