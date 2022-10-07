@@ -1,13 +1,12 @@
 import {
   Article,
-  cartContainerNode,
   Div,
   Image,
   Input,
   Paragraph,
-  singleTotalPriceNode,
   Title,
-} from "../constants.js";
+} from "../customComponents.js";
+import { cartContainerNode, singleTotalPriceNode } from "../constants.js";
 import {
   clearLocalStorage,
   getLocalStorage,

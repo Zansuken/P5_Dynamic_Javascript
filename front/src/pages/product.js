@@ -5,16 +5,14 @@ import {
   colorsInputNode,
   currentCartStateDetailsNode,
   descriptionNode,
-  Image,
   imgContainerNode,
-  Option,
   priceNode,
   quantityInputContainerNode,
   quantityInputNode,
-  SnackBar,
   titleNode,
   URL,
 } from "../constants.js";
+import { Image, SnackBar, Option } from "../customComponents.js";
 import {
   addToLocalStorage,
   animateErrorMessage,

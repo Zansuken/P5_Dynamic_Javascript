@@ -2,9 +2,9 @@ import {
   displayedErrorNode,
   globalTotalPriceNode,
   globalTotalQuantityNode,
-  Paragraph,
   selectedNode,
 } from "./constants.js";
+import { Paragraph } from "./customComponents.js";
 
 // Fetch products
 export const getProductsData = async () => {

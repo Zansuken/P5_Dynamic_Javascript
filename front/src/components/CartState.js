@@ -1,10 +1,9 @@
 import {
-  CartStateDetails,
-  CartStateIcon,
   currentCartStateDetailsNode,
   currentCartStateIconNode,
   URL,
 } from "../constants.js";
+import { CartStateDetails, CartStateIcon } from "../customComponents.js";
 import {
   cartStateSwitch,
   getLocalStorage,
