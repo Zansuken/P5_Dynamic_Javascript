@@ -1,5 +1,20 @@
 import { updateCartIcon } from "../components/CartState.js";
-import { Image, Option, SnackBar, URL } from "../constants.js";
+import {
+  addToCartBtnNode,
+  colorInputContainerNode,
+  colorsInputNode,
+  currentCartStateDetailsNode,
+  descriptionNode,
+  Image,
+  imgContainerNode,
+  Option,
+  priceNode,
+  quantityInputContainerNode,
+  quantityInputNode,
+  SnackBar,
+  titleNode,
+  URL,
+} from "../constants.js";
 import {
   addToLocalStorage,
   animateErrorMessage,
@@ -14,20 +29,6 @@ if (URL.includes("product")) {
   const params = new URLSearchParams(queryString);
 
   const productId = params.get("id");
-
-  const imgContainer = document.querySelector(".item__img");
-  const title = document.querySelector("#title");
-  const price = document.querySelector("#price");
-  const description = document.querySelector("#description");
-  const colorInputContainer = document.querySelector(
-    ".item__content__settings__color"
-  );
-  const colorsInput = document.querySelector("#colors");
-  const quantityInputContainer = document.querySelector(
-    ".item__content__settings__quantity"
-  );
-  const quantityInput = document.querySelector("#quantity");
-  const addToCartBtn = document.querySelector("#addToCart");
 
   try {
     const product = await getSingleProductData(productId);
@@ -49,23 +50,24 @@ if (URL.includes("product")) {
       price: productPrice,
     };
 
+    // eslint-disable-next-line
     let isValid;
 
-    imgContainer.appendChild(Image({ src: imageUrl, alt: altTxt }));
+    imgContainerNode().appendChild(Image({ src: imageUrl, alt: altTxt }));
 
-    title.innerText = name;
-    price.innerText = productPrice;
-    description.innerText = productDescription;
+    titleNode().innerText = name;
+    priceNode().innerText = productPrice;
+    descriptionNode().innerText = productDescription;
 
     colors.forEach((color) => {
-      colorsInput.append(Option({ value: color, isCapitalized: true }));
+      colorsInputNode().append(Option({ value: color, isCapitalized: true }));
     });
 
-    colorsInput.addEventListener("change", (event) => {
+    colorsInputNode().addEventListener("change", (event) => {
       dataToSave = { ...dataToSave, color: "" };
       if (!event.target.value || event.target.selectedOptions.index === 0) {
         errorMessageGenerator({
-          node: colorInputContainer,
+          node: colorInputContainerNode(),
           id: "colorError",
           type: "error",
           value: "La sélection d'une couleur est obligatoire",
@@ -79,11 +81,11 @@ if (URL.includes("product")) {
       }
     });
 
-    quantityInput.addEventListener("change", (event) => {
+    quantityInputNode().addEventListener("change", (event) => {
       dataToSave = { ...dataToSave, quantity: "" };
       if (!event.target.value || event.target.value < 1) {
         errorMessageGenerator({
-          node: quantityInputContainer,
+          node: quantityInputContainerNode(),
           id: "quantityError",
           type: "error",
           value: "Le nombre de produit à ajouter est manquant ou incorrect",
@@ -100,7 +102,7 @@ if (URL.includes("product")) {
       }
     });
 
-    addToCartBtn.addEventListener("click", () => {
+    addToCartBtnNode().addEventListener("click", () => {
       if (!dataToSave.color || !dataToSave.quantity) {
         if (dataToSave.quantity) {
           animateErrorMessage("colorError");
@@ -120,8 +122,7 @@ if (URL.includes("product")) {
         ...dataToSave,
         totalPrice: price * quantity,
       });
-      const resetCartDetails = document.querySelector("#cartStateDetails");
-      resetCartDetails?.remove();
+      currentCartStateDetailsNode()?.remove();
       updateCartIcon();
     });
   } catch (error) {

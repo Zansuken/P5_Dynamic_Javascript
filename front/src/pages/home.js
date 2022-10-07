@@ -1,14 +1,13 @@
 import { updateCartIcon } from "../components/CartState.js";
 import ProductCard from "../components/ProductCard.js";
-import { URL } from "../constants.js";
+import { productsContainerNode, URL } from "../constants.js";
 import { finishLoading, getProductsData, startLoading } from "../helpers.js";
 
 if (URL.includes("index")) {
-  const productsContainer = document.querySelector("#items");
   try {
     updateCartIcon();
 
-    startLoading(productsContainer, true);
+    startLoading(productsContainerNode(), true);
 
     const products = await getProductsData();
 
@@ -16,7 +15,7 @@ if (URL.includes("index")) {
       const { altTxt, description, imageUrl, name } = element;
       const href = `product.html?id=${element._id}`;
 
-      productsContainer.append(
+      productsContainerNode().append(
         ProductCard({
           data: products,
           alt: altTxt,

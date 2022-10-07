@@ -1,4 +1,10 @@
-import { CartStateDetails, CartStateIcon, URL } from "../constants.js";
+import {
+  CartStateDetails,
+  CartStateIcon,
+  currentCartStateDetailsNode,
+  currentCartStateIconNode,
+  URL,
+} from "../constants.js";
 import {
   cartStateSwitch,
   getLocalStorage,
@@ -13,13 +19,9 @@ export const updateCartIcon = async () => {
       if (cart) {
         CartStateIcon(cart.length, cart, products);
 
-        const cartStateElement = document.querySelector("#cartState");
-        const cartStateDetailsElement =
-          document.querySelector("#cartStateDetails");
-
         cartStateSwitch({
-          elementToHide: cartStateElement,
-          elementToShow: cartStateDetailsElement,
+          elementToHide: currentCartStateIconNode(),
+          elementToShow: currentCartStateDetailsNode(),
           elementGenerator: CartStateDetails,
           cart: cart,
           products: products,
@@ -27,8 +29,8 @@ export const updateCartIcon = async () => {
         });
 
         cartStateSwitch({
-          elementToHide: cartStateDetailsElement,
-          elementToShow: cartStateElement,
+          elementToHide: currentCartStateDetailsNode(),
+          elementToShow: currentCartStateIconNode(),
           elementGenerator: CartStateIcon,
           cart: cart,
           products: products,

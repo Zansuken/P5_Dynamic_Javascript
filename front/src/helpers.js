@@ -1,4 +1,10 @@
-import { Paragraph } from "./constants.js";
+import {
+  displayedErrorNode,
+  globalTotalPriceNode,
+  globalTotalQuantityNode,
+  Paragraph,
+  selectedNode,
+} from "./constants.js";
 
 // Fetch products
 export const getProductsData = async () => {
@@ -169,9 +175,7 @@ export const startLoading = (node, isLoading) => {
 };
 
 // Remove the loading spinner
-export const finishLoading = () => {
-  document.querySelector("#loader").remove();
-};
+export const finishLoading = () => document.querySelector("#loader").remove();
 
 // Capitalize words
 export const capitalize = (string) => {
@@ -194,17 +198,14 @@ export const errorMessageGenerator = (props = { node, id, type, value }) => {
 
 // Remove error message
 export const removeErrorMessage = (id) => {
-  const displayedError = document.querySelector(`#${id}`);
-  if (displayedError) {
-    displayedError.remove();
+  if (displayedErrorNode(id)) {
+    displayedErrorNode(id).remove();
   }
 };
 
 // Animate error message
 export const animateErrorMessage = (id) => {
-  if (document.getElementById(id)) {
-    const element = document.getElementById(id);
-
+  if (selectedNode(id)) {
     const animation = [
       {
         transform: "translateX(0px)",
@@ -237,14 +238,12 @@ export const animateErrorMessage = (id) => {
       iteration: 1,
     };
 
-    element.animate(animation, timing);
+    selectedNode(id).animate(animation, timing);
   }
 };
 
 // Animate snackbar
 export const animateSnackbar = (id) => {
-  const element = document.getElementById(id);
-
   const animation = [
     {
       bottom: "-30px",
@@ -293,10 +292,10 @@ export const animateSnackbar = (id) => {
     iteration: 1,
   };
 
-  element.animate(animation, timing);
+  selectedNode(id).animate(animation, timing);
   setTimeout(function () {
-    if (element) {
-      element.remove();
+    if (selectedNode(id)) {
+      selectedNode(id).remove();
     }
   }, 5000);
 };
@@ -329,8 +328,6 @@ export const cartStateSwitch = ({
 
 // Update totalPrice and totalQuantity displayed values
 export const updateTotalPriceQuantityDisplayed = () => {
-  const globalTotalPriceNode = document.querySelector("#totalPrice");
-  const globalTotalQuantityNode = document.querySelector("#totalQuantity");
   const updatedCart = getLocalStorage("cart");
 
   let newTotalQuantity = 0;
@@ -341,6 +338,6 @@ export const updateTotalPriceQuantityDisplayed = () => {
     newTotalPrice = Number(newTotalPrice) + Number(item.totalPrice);
   });
 
-  globalTotalQuantityNode.innerText = newTotalQuantity;
-  globalTotalPriceNode.innerText = newTotalPrice;
+  globalTotalQuantityNode().innerText = newTotalQuantity;
+  globalTotalPriceNode().innerText = formatToEuro(newTotalPrice);
 };

@@ -1,4 +1,13 @@
-import { Article, Div, Image, Input, Paragraph, Title } from "../constants.js";
+import {
+  Article,
+  cartContainerNode,
+  Div,
+  Image,
+  Input,
+  Paragraph,
+  singleTotalPriceNode,
+  Title,
+} from "../constants.js";
 import {
   clearLocalStorage,
   getLocalStorage,
@@ -69,10 +78,11 @@ const CartItem = (props = { classes }) => {
   input.addEventListener("change", (event) => {
     const data = JSON.parse(event.target.dataset.relatedProduct);
     const displayedQuantityNode = event.target.previousSibling;
-    const totalPriceNode = document.getElementById(`${itemId}-${itemColor}`);
 
     displayedQuantityNode.innerText = `Qté: ${event.target.value}`;
-    totalPriceNode.innerText = `${productPrice * event.target.value},00 €`;
+    singleTotalPriceNode(itemId, itemColor).innerText = `${
+      productPrice * event.target.value
+    },00 €`;
 
     updateSingleItem("cart", {
       id: data.itemId,
@@ -101,7 +111,6 @@ const CartItem = (props = { classes }) => {
     const data = JSON.parse(event.target.dataset.relatedProduct);
     removeFromLocalStorage("cart", { id: data.itemId, color: itemColor });
     const cart = getLocalStorage("cart");
-    const cartContainer = document.querySelector("#cart__items");
     const node =
       event.target.parentElement.parentElement.parentElement.parentElement;
 
@@ -111,7 +120,7 @@ const CartItem = (props = { classes }) => {
     if (cart) {
       if (cart.length === 0) {
         clearLocalStorage();
-        cartContainer.remove();
+        cartContainerNode().remove();
       }
     }
     updateTotalPriceQuantityDisplayed();

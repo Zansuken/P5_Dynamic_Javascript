@@ -10,6 +10,35 @@ export const URL = window.location.href;
 
 // HTML Elements
 
+// Nodes selectors
+
+export const pageNode = () => document.querySelector("body");
+export const currentCartStateIconNode = () =>
+  document.querySelector("#cartState");
+export const currentCartStateDetailsNode = () =>
+  document.querySelector("#cartStateDetails");
+export const singleTotalPriceNode = (itemId, itemColor) =>
+  document.getElementById(`${itemId}-${itemColor}`);
+
+export const globalTotalPriceNode = () => document.querySelector("#totalPrice");
+export const globalTotalQuantityNode = () =>
+  document.querySelector("#totalQuantity");
+export const cartContainerNode = () => document.querySelector("#cart__items");
+export const imgContainerNode = () => document.querySelector(".item__img");
+export const titleNode = () => document.querySelector("#title");
+export const priceNode = () => document.querySelector("#price");
+export const descriptionNode = () => document.querySelector("#description");
+export const colorInputContainerNode = () =>
+  document.querySelector(".item__content__settings__color");
+export const colorsInputNode = () => document.querySelector("#colors");
+export const quantityInputContainerNode = () =>
+  document.querySelector(".item__content__settings__quantity");
+export const quantityInputNode = () => document.querySelector("#quantity");
+export const addToCartBtnNode = () => document.querySelector("#addToCart");
+export const productsContainerNode = () => document.querySelector("#items");
+export const displayedErrorNode = (id) => document.querySelector(`#${id}`);
+export const selectedNode = (id) => document.getElementById(id);
+
 // Generate an anchor element
 export const Link = (props = { href }, children) => {
   const { href } = props;
@@ -254,8 +283,6 @@ export const Option = (props = { value, isCapitalized }) => {
 
 // Generate an information snackbar
 export const SnackBar = (message, type) => {
-  const page = document.querySelector("body");
-
   const displayedMessage = Paragraph({ value: message });
 
   const snackbar = Div({ classes: "snackbar" }, { displayedMessage });
@@ -266,14 +293,12 @@ export const SnackBar = (message, type) => {
     snackbar.classList.add("snackbarSuccess");
   }
 
-  page.append(snackbar);
+  pageNode().append(snackbar);
   animateSnackbar("snackbar");
 };
 
 export const CartStateIcon = (quantity) => {
-  const currentCartStateIcon = document.querySelector("#cartState");
-  currentCartStateIcon?.remove();
-  const page = document.querySelector("body");
+  currentCartStateIconNode()?.remove();
   const displayedQuantity = Paragraph({ value: quantity });
   const bagIcon = Image({ src: "../images/icons/bag.svg", alt: "bag icon" });
 
@@ -284,18 +309,15 @@ export const CartStateIcon = (quantity) => {
 
   container.setAttribute("id", "cartState");
 
-  page.append(container);
+  pageNode().append(container);
 };
 
 export const CartStateDetails = (cart, products) => {
-  const currentCartStateDetails = document.querySelector("#cartStateDetails");
-  currentCartStateDetails?.remove();
+  currentCartStateDetailsNode()?.remove();
 
-  const page = document.querySelector("body");
   const list = document.createElement("ul");
   const lastLine = document.createElement("li");
   const closeButton = document.createElement("button");
-  const cartStateElement = document.querySelector("#cartState");
 
   closeButton.setAttribute("id", "closeDetailsButton");
   closeButton.classList.add("closeDetailsButton");
@@ -340,11 +362,11 @@ export const CartStateDetails = (cart, products) => {
 
   container.setAttribute("id", "cartStateDetails");
 
-  page.append(container);
+  pageNode().append(container);
   container.classList.add("show");
   closeButton.addEventListener("click", () => {
     container.classList.remove("show");
-    cartStateElement?.classList.remove("hide");
-    cartStateElement?.classList.add("show");
+    currentCartStateIconNode()?.classList.remove("hide");
+    currentCartStateIconNode()?.classList.add("show");
   });
 };

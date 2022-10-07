@@ -1,5 +1,5 @@
 import CartList from "../components/CartList.js";
-import { URL } from "../constants.js";
+import { cartContainerNode, URL } from "../constants.js";
 import {
   finishLoading,
   getLocalStorage,
@@ -8,9 +8,8 @@ import {
 } from "../helpers.js";
 
 if (URL.includes("cart")) {
-  const cartContainer = document.querySelector("#cart__items");
   try {
-    startLoading(cartContainer, true);
+    startLoading(cartContainerNode(), true);
 
     const cart = getLocalStorage("cart");
     const products = await getProductsData();

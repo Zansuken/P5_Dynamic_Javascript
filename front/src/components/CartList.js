@@ -1,10 +1,12 @@
 import CartItem from "../components/CartItem.js";
+import {
+  cartContainerNode,
+  globalTotalPriceNode,
+  globalTotalQuantityNode,
+} from "../constants.js";
+import { formatToEuro } from "../helpers.js";
 
 const CartList = (props = { cart, products }) => {
-  const cartContainer = document.querySelector("#cart__items");
-  const globalTotalPriceNode = document.querySelector("#totalPrice");
-  const globalTotalQuantityNode = document.querySelector("#totalQuantity");
-
   let totalPrice = 0;
   let totalQuantity = 0;
 
@@ -39,11 +41,11 @@ const CartList = (props = { cart, products }) => {
         products,
         cart,
       });
-      cartContainer.append(cartItem);
+      cartContainerNode().append(cartItem);
     }
   });
-  globalTotalPriceNode.innerText = totalPrice;
-  globalTotalQuantityNode.innerText = totalQuantity;
+  globalTotalPriceNode().innerText = formatToEuro(totalPrice);
+  globalTotalQuantityNode().innerText = totalQuantity;
 };
 
 export default CartList;
