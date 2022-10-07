@@ -4,6 +4,7 @@ import {
   getLocalStorage,
   removeFromLocalStorage,
   updateSingleItem,
+  updateTotalPriceQuantityDisplayed,
 } from "../helpers.js";
 
 const CartItem = (props = { classes }) => {
@@ -69,14 +70,17 @@ const CartItem = (props = { classes }) => {
     const data = JSON.parse(event.target.dataset.relatedProduct);
     const displayedQuantityNode = event.target.previousSibling;
     const totalPriceNode = document.getElementById(`${itemId}-${itemColor}`);
+
     displayedQuantityNode.innerText = `Qté: ${event.target.value}`;
     totalPriceNode.innerText = `${productPrice * event.target.value},00 €`;
+
     updateSingleItem("cart", {
       id: data.itemId,
       color: data.itemColor,
       quantity: event.target.value,
       price: productPrice,
     });
+    updateTotalPriceQuantityDisplayed();
   });
   const itemQuantityContainer = Div(
     { classes: settingsQuantity },
@@ -110,6 +114,7 @@ const CartItem = (props = { classes }) => {
         cartContainer.remove();
       }
     }
+    updateTotalPriceQuantityDisplayed();
   });
 
   const itemDeleteContainer = Div({ classes: settingsDelete }, { deleteLabel });
