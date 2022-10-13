@@ -171,13 +171,9 @@ const CartItem = (props = { classes }) => {
     { itemImageContainer, itemContentContainer }
   );
 
-  cartItem.setAttribute(
-    "data-related-product",
-    JSON.stringify({
-      itemId,
-      itemColor,
-    })
-  );
+  cartItem.setAttribute("data-id", itemId);
+  cartItem.setAttribute("data-color", itemColor);
+  cartItem.setAttribute("data-quantity", itemQuantity);
 
   return cartItem;
 };
