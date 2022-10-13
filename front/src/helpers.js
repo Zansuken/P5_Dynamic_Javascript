@@ -1,5 +1,7 @@
 import {
   displayedErrorNode,
+  formNode,
+  geoApiURL,
   globalTotalPriceNode,
   globalTotalQuantityNode,
   selectedNode,
@@ -20,6 +22,46 @@ export const getSingleProductData = async (id) => {
   const product = await response.json();
 
   return product;
+};
+
+// Post order
+export const sendOrder = async (data) => {
+  const response = await fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
+
+//generates random id;
+export const orderIdGenerator = () => {
+  let s4 = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  };
+  return (
+    s4() +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    s4() +
+    s4()
+  );
 };
 
 // Local storage
@@ -207,6 +249,67 @@ export const capitalize = (string) => {
   const lowerCase = string.toLowerCase();
   return string.charAt(0).toUpperCase() + lowerCase.slice(1);
 };
+
+// Build the error message form
+export const buildErrorMessage = (label, value, message) => {
+  const errorRecipient = getRelatedInput(label);
+  errorRecipient.innerText = `${value} ${message}!`;
+};
+
+// Remove the error message form
+export const removeFormErrorMessage = (label) => {
+  const errorRecipient = getRelatedInput(label);
+  if (errorRecipient) {
+    errorRecipient.innerText = "";
+  }
+  return;
+};
+
+// Get ErrorMessage input form
+export const getRelatedInput = (label) =>
+  document.querySelector(`#${label}ErrorMsg`);
+
+// Check if given string includes numbers
+export const hasNumber = (string) => /\d/.test(string);
+
+// Check if given address exists
+export const isAddressValid = (address, city, addressLabel, value) => {
+  const url = geoApiURL(address);
+  fetch(url)
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result);
+
+      if (result.features.length === 0) {
+        buildErrorMessage(addressLabel, value, "est incorrecte");
+      } else {
+        const foundCity = result.features[0].properties.city;
+        const foundNumber = result.features[0].properties.housenumber;
+        const foundStreet = result.features[0].properties.street;
+
+        if (foundCity.toLowerCase() !== city.toLowerCase()) {
+          buildErrorMessage(
+            addressLabel,
+            value,
+            "n'existe pas dans la ville associée"
+          );
+        } else {
+          const addressNode = formNode().elements["address"];
+          removeFormErrorMessage(addressLabel);
+          addressNode.value = `${foundNumber} ${foundStreet}`;
+        }
+      }
+    })
+    .catch((error) => console.log("error", error));
+};
+
+// Check if given string is an valid city
+export const isValidCity = (string) =>
+  /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/.test(string);
+
+// Check if given string is an email
+export const isValidEmail = (string) =>
+  /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(string);
 
 // Generate error message
 export const errorMessageGenerator = (props = { node, id, type, value }) => {

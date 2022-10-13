@@ -1,5 +1,10 @@
 // URL
 export const URL = window.location.href;
+export const GEO_API_KEY = "e7c259ac59784583adec1b45181b2fa8";
+export const geoApiURL = (ADDRESS_TO_SEARCH) =>
+  `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
+    ADDRESS_TO_SEARCH
+  )}&apiKey=${GEO_API_KEY}`;
 
 // HTML Elements
 
@@ -31,3 +36,5 @@ export const addToCartBtnNode = () => document.querySelector("#addToCart");
 export const productsContainerNode = () => document.querySelector("#items");
 export const displayedErrorNode = (id) => document.querySelector(`#${id}`);
 export const selectedNode = (id) => document.getElementById(id);
+export const formNode = () =>
+  document.querySelector(".cart__order .cart__order__form");
