@@ -8,6 +8,7 @@ import {
   animateSnackbar,
   capitalize,
   formatToEuro,
+  getCartSummary,
 } from "./helpers.js";
 
 // Generate an anchor element
@@ -295,21 +296,14 @@ export const CartStateDetails = (cart, products) => {
 
   closeButton.textContent = "X";
 
-  let totalQuantity = 0;
-  let totalPrice = 0;
-
   cart.forEach((element) => {
     const { id, color, quantity } = element;
-
-    totalQuantity = totalQuantity + Number(quantity);
 
     const associatedElement = products.filter(
       (product) => product._id === id
     )[0];
 
     const { name, price } = associatedElement;
-
-    totalPrice = totalPrice + Number(price) * quantity;
 
     const lineContent = `x${quantity} ${name} (${color}): ${formatToEuro(
       price * quantity
@@ -320,6 +314,8 @@ export const CartStateDetails = (cart, products) => {
 
     list.append(line);
   });
+
+  const { totalQuantity, totalPrice } = getCartSummary();
 
   const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
     totalPrice

@@ -4,12 +4,9 @@ import {
   globalTotalPriceNode,
   globalTotalQuantityNode,
 } from "../constants.js";
-import { formatToEuro } from "../helpers.js";
+import { formatToEuro, getCartSummary } from "../helpers.js";
 
 const CartList = (props = { cart, products }) => {
-  let totalPrice = 0;
-  let totalQuantity = 0;
-
   const { cart, products } = props;
 
   if (!cart) {
@@ -18,10 +15,6 @@ const CartList = (props = { cart, products }) => {
 
   cart.forEach((item) => {
     if (item.id) {
-      totalPrice =
-        Number(totalPrice) + Number(item.price) * Number(item.quantity);
-      totalQuantity = Number(totalQuantity) + Number(item.quantity);
-
       const cartItem = CartItem({
         classes: {
           root: "cart__item",
@@ -44,6 +37,9 @@ const CartList = (props = { cart, products }) => {
       cartContainerNode().append(cartItem);
     }
   });
+
+  const { totalQuantity, totalPrice } = getCartSummary();
+
   globalTotalPriceNode().innerText = formatToEuro(totalPrice);
   globalTotalQuantityNode().innerText = totalQuantity;
 };

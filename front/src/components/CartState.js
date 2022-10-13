@@ -6,6 +6,7 @@ import {
 import { CartStateDetails, CartStateIcon } from "../customComponents.js";
 import {
   cartStateSwitch,
+  getCartSummary,
   getLocalStorage,
   getProductsData,
 } from "../helpers.js";
@@ -16,7 +17,9 @@ export const updateCartIcon = async () => {
       const products = await getProductsData();
       const cart = getLocalStorage("cart");
       if (cart) {
-        CartStateIcon(cart.length, cart, products);
+        const { totalQuantity } = getCartSummary();
+
+        CartStateIcon(totalQuantity, cart, products);
 
         cartStateSwitch({
           elementToHide: currentCartStateIconNode(),

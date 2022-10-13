@@ -74,6 +74,7 @@ export const addToLocalStorage = (key, value) => {
     const convertedValue = JSON.stringify(productList);
     window.localStorage.setItem(key, convertedValue);
   }
+  updateCartSummary(key);
 };
 
 // Remove a single item to local storage
@@ -98,6 +99,7 @@ export const removeFromLocalStorage = (key, elementToRemove) => {
       });
       window.localStorage.setItem(key, JSON.stringify(productList));
     }
+    updateCartSummary(key);
   }
 };
 
@@ -127,8 +129,31 @@ export const updateSingleItem = (key, elementToUpdate) => {
         }
       });
       window.localStorage.setItem(key, JSON.stringify(productList));
+      updateCartSummary(key);
     }
   }
+};
+
+// Update Cart Summary
+export const updateCartSummary = (key) => {
+  const currentState = getLocalStorage(key);
+  let totalQuantity = 0;
+  let totalPrice = 0;
+  currentState.forEach((item) => {
+    const { quantity, price } = item;
+    totalQuantity = totalQuantity + Number(quantity);
+    totalPrice = totalPrice + Number(price) * quantity;
+  });
+  window.localStorage.setItem(
+    "cartSummary",
+    JSON.stringify({ totalPrice, totalQuantity })
+  );
+};
+
+export const getCartSummary = () => {
+  if (!getLocalStorage("cartSummary")) return;
+  const result = window.localStorage.getItem("cartSummary");
+  return JSON.parse(result);
 };
 
 // Clear local storage
