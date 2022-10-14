@@ -38,4 +38,5 @@ export const displayedErrorNode = (id) => document.querySelector(`#${id}`);
 export const selectedNode = (id) => document.getElementById(id);
 export const formNode = () =>
   document.querySelector(".cart__order .cart__order__form");
+export const submitBtnNode = () => document.getElementById("order");
 export const orderIdNode = () => document.getElementById("orderId");

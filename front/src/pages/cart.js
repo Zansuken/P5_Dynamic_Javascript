@@ -1,5 +1,10 @@
 import CartList from "../components/CartList.js";
-import { cartContainerNode, formNode, URL } from "../constants.js";
+import {
+  cartContainerNode,
+  formNode,
+  submitBtnNode,
+  URL,
+} from "../constants.js";
 import {
   buildErrorMessage,
   finishLoading,
@@ -20,9 +25,11 @@ if (URL.includes("cart")) {
     const cart = getLocalStorage("cart");
     const cartSummary = getLocalStorage("cartSummary");
     const products = await getProductsData();
-
+    submitBtnNode().removeAttribute("disabled");
     if (cart) {
       CartList({ cart, products });
+    } else {
+      submitBtnNode().setAttribute("disabled", "");
     }
     finishLoading();
 

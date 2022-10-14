@@ -44,7 +44,7 @@ export const sendOrder = async (contact, cartSummary) => {
 export const getOrderId = async (data) => {
   const order = await data.json();
   addOrderIdToLocalStorage("orderId", order?.orderId);
-  redirectToConfirmationPage();
+  redirectToConfirmationPage(order?.orderId);
 };
 
 //generates random id;
@@ -71,8 +71,8 @@ export const orderIdGenerator = () => {
 };
 
 // Redirect to confirmation page
-export const redirectToConfirmationPage = () =>
-  window.location.replace("confirmation.html");
+export const redirectToConfirmationPage = (orderId) =>
+  window.location.replace(`confirmation.html?${orderId}`);
 
 // Local storage
 
