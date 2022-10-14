@@ -1,4 +1,5 @@
 import {
+  confirmationContainerNode,
   currentCartStateDetailsNode,
   currentCartStateIconNode,
   pageNode,
@@ -9,6 +10,7 @@ import {
   capitalize,
   formatToEuro,
   getCartSummary,
+  getLocalStorage,
 } from "./helpers.js";
 
 // Generate an anchor element
@@ -336,4 +338,56 @@ export const CartStateDetails = (cart, products) => {
     currentCartStateIconNode()?.classList.remove("hide");
     currentCartStateIconNode()?.classList.add("show");
   });
+};
+
+export const OrderDetails = (products) => {
+  const cart = getLocalStorage("cart");
+
+  const listContainer = confirmationContainerNode().childNodes[1];
+  const list = document.createElement("ul");
+  const firstLine = document.createElement("li");
+  const lastLine = document.createElement("li");
+  const btnContainer = document.createElement("div");
+  const backToHomeBtn = document.createElement("button");
+
+  btnContainer.classList.add("confirmation__action");
+  backToHomeBtn.textContent = "Page d'accueil";
+  backToHomeBtn.setAttribute("id", "backToHomeBtn");
+  btnContainer.appendChild(backToHomeBtn);
+
+  firstLine.textContent = "Résumé :";
+
+  list.append(firstLine);
+
+  cart.forEach((element) => {
+    const { id, color, quantity } = element;
+
+    const associatedElement = products.filter(
+      (product) => product._id === id
+    )[0];
+
+    const { name, price } = associatedElement;
+
+    const lineContent = `x${quantity} ${name} (${color}): ${formatToEuro(
+      price * quantity
+    )}`;
+
+    const line = document.createElement("li");
+    line.textContent = lineContent;
+
+    list.append(line);
+  });
+
+  const { totalQuantity, totalPrice } = getCartSummary();
+
+  const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
+    totalPrice
+  )}`;
+
+  lastLine.textContent = lineTotal;
+
+  list.append(lastLine);
+
+  listContainer.appendChild(list);
+  return btnContainer;
 };

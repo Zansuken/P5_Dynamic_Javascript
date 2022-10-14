@@ -17,20 +17,21 @@ h2 {
 /************/
 .cart__item {
   display: flex;
-  justify-content: space-around;
+  gap: 50px;
+  justify-content: center;
   border-top: 1px solid white;
   padding-top: 35px;
   margin-bottom: 30px;
 }
 .cart__item__img {
-  width: 25%;
+  width: 100%;
+  max-width: 350px;
 }
 .cart__item__img img {
   width: 100%;
   border-radius: 25px;
 }
 .cart__item__content {
-  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -149,10 +150,9 @@ h2 {
   .cart__item {
     flex-direction: column;
     align-items: center;
+    gap: 0;
   }
-  .cart__item__img {
-    width: 50%;
-  }
+
   .cart__item__content {
     width: 90%;
   }

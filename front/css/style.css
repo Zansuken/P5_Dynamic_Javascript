@@ -347,6 +347,24 @@ footer .footerSecondary {
   height: 120px;
 }
 
+.confirmation__action {
+  display: flex;
+  justify-content: center;
+}
+.confirmation__action button {
+  height: 70px;
+  font-size: 22px;
+  border-radius: 40px;
+  border: 0;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 18px 28px;
+  cursor: pointer;
+}
+.confirmation__action button:hover {
+  box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
+}
+
 /***************/
 /*Media queries*/
 /***************/

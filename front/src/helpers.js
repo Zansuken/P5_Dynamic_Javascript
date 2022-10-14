@@ -72,7 +72,7 @@ export const orderIdGenerator = () => {
 
 // Redirect to confirmation page
 export const redirectToConfirmationPage = (orderId) =>
-  window.location.replace(`confirmation.html?${orderId}`);
+  window.location.replace(`confirmation.html?id=${orderId}`);
 
 // Local storage
 
