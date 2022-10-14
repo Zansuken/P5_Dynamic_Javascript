@@ -1,4 +1,5 @@
 import {
+  BASE_URL,
   displayedErrorNode,
   formNode,
   geoApiURL,
@@ -10,7 +11,7 @@ import { Paragraph } from "./customComponents.js";
 
 // Fetch products
 export const getProductsData = async () => {
-  const response = await fetch("http://localhost:3000/api/products");
+  const response = await fetch(BASE_URL);
   const products = await response.json();
 
   return products;
@@ -18,7 +19,7 @@ export const getProductsData = async () => {
 
 // Fetch one product
 export const getSingleProductData = async (id) => {
-  const response = await fetch(`http://localhost:3000/api/products/${id}`);
+  const response = await fetch(`${BASE_URL}/${id}`);
   const product = await response.json();
 
   return product;
@@ -29,7 +30,7 @@ export const sendOrder = async (contact, cartSummary) => {
   const cart = getLocalStorage("cart");
   const products = cart.map((product) => product.id);
   const order = { contact, products, cartSummary };
-  const response = await fetch("http://localhost:3000/api/products/order", {
+  const response = await fetch(`${BASE_URL}/order`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -73,6 +74,9 @@ export const orderIdGenerator = () => {
 // Redirect to confirmation page
 export const redirectToConfirmationPage = (orderId) =>
   window.location.replace(`confirmation.html?id=${orderId}`);
+
+// Redirect to home page
+export const redirectToHomePage = () => (window.location.href = "./index.html");
 
 // Local storage
 

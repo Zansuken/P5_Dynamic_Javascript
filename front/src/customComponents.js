@@ -389,5 +389,5 @@ export const OrderDetails = (products) => {
   list.append(lastLine);
 
   listContainer.appendChild(list);
-  return btnContainer;
+  listContainer.appendChild(btnContainer);
 };

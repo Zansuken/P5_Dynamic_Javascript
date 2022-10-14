@@ -1,5 +1,6 @@
 // URL
 export const URL = window.location.href;
+export const BASE_URL = "http://localhost:3000/api/products";
 export const GEO_API_KEY = "e7c259ac59784583adec1b45181b2fa8";
 export const geoApiURL = (ADDRESS_TO_SEARCH) =>
   `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
@@ -42,3 +43,5 @@ export const submitBtnNode = () => document.getElementById("order");
 export const orderIdNode = () => document.getElementById("orderId");
 export const confirmationContainerNode = () =>
   document.querySelector(".confirmation");
+export const redirectToHomeBtnNode = () =>
+  document.getElementById("backToHomeBtn");

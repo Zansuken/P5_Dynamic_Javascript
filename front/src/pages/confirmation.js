@@ -1,6 +1,10 @@
-import { confirmationContainerNode, orderIdNode, URL } from "../constants.js";
+import { orderIdNode, redirectToHomeBtnNode, URL } from "../constants.js";
 import { OrderDetails } from "../customComponents.js";
-import { clearLocalStorage, getProductsData } from "../helpers.js";
+import {
+  clearLocalStorage,
+  getProductsData,
+  redirectToHomePage,
+} from "../helpers.js";
 
 if (URL.includes("confirmation")) {
   try {
@@ -10,8 +14,11 @@ if (URL.includes("confirmation")) {
     const searchOrderIdParams = new URLSearchParams(orderIdURL);
     const orderId = searchOrderIdParams.get("id");
     orderIdNode().innerText = orderId;
-    confirmationContainerNode().appendChild(OrderDetails(products));
-    clearLocalStorage();
+    OrderDetails(products);
+    redirectToHomeBtnNode().addEventListener("click", () => {
+      clearLocalStorage();
+      redirectToHomePage();
+    });
   } catch (error) {
     console.error(error.message);
   }
