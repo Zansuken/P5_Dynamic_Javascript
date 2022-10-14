@@ -25,20 +25,26 @@ export const getSingleProductData = async (id) => {
 };
 
 // Post order
-export const sendOrder = async (data) => {
+export const sendOrder = async (contact, cartSummary) => {
+  const cart = getLocalStorage("cart");
+  const products = cart.map((product) => product.id);
+  const order = { contact, products, cartSummary };
   const response = await fetch("http://localhost:3000/api/products/order", {
     method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
     headers: {
+      Accept: "application/json",
       "Content-Type": "application/json",
     },
-    redirect: "follow",
-    referrerPolicy: "no-referrer",
-    body: JSON.stringify(data),
+    body: JSON.stringify(order),
   });
-  return response.json();
+  getOrderId(response);
+};
+
+// Get order id from POST and add it to local storage
+export const getOrderId = async (data) => {
+  const order = await data.json();
+  addOrderIdToLocalStorage("orderId", order?.orderId);
+  redirectToConfirmationPage();
 };
 
 //generates random id;
@@ -63,6 +69,10 @@ export const orderIdGenerator = () => {
     s4()
   );
 };
+
+// Redirect to confirmation page
+export const redirectToConfirmationPage = () =>
+  window.location.replace("confirmation.html");
 
 // Local storage
 
@@ -192,10 +202,23 @@ export const updateCartSummary = (key) => {
   );
 };
 
+// Get Cart Summary
 export const getCartSummary = () => {
   if (!getLocalStorage("cartSummary")) return;
   const result = window.localStorage.getItem("cartSummary");
   return JSON.parse(result);
+};
+
+// Add orderId to local storage
+export const addOrderIdToLocalStorage = (key, orderId) => {
+  window.localStorage.setItem(key, JSON.stringify(orderId));
+};
+
+// Remove orderId to local storage
+export const removeOrderIdToLocalStorage = (key) => {
+  if (getLocalStorage(key)) {
+    window.localStorage.removeItem(key);
+  }
 };
 
 // Clear local storage
@@ -278,8 +301,6 @@ export const isAddressValid = (address, city, addressLabel, value) => {
   fetch(url)
     .then((response) => response.json())
     .then((result) => {
-      console.log(result);
-
       if (result.features.length === 0) {
         buildErrorMessage(addressLabel, value, "est incorrecte");
       } else {
@@ -300,7 +321,7 @@ export const isAddressValid = (address, city, addressLabel, value) => {
         }
       }
     })
-    .catch((error) => console.log("error", error));
+    .catch((error) => console.error("error", error.message));
 };
 
 // Check if given string is an valid city

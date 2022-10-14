@@ -9,7 +9,6 @@ import {
   isAddressValid,
   isValidCity,
   isValidEmail,
-  orderIdGenerator,
   removeFormErrorMessage,
   sendOrder,
   startLoading,
@@ -18,7 +17,6 @@ import {
 if (URL.includes("cart")) {
   try {
     startLoading(cartContainerNode(), true);
-
     const cart = getLocalStorage("cart");
     const cartSummary = getLocalStorage("cartSummary");
     const products = await getProductsData();
@@ -133,21 +131,14 @@ if (URL.includes("cart")) {
             break;
         }
       });
-      const order = {
-        orderId: orderIdGenerator(),
-        contact: {
-          firstName: firstNameValue,
-          lastName: lastNameValue,
-          address: addressValue,
-          city: cityValue,
-          email: emailValue,
-        },
-        items: cart,
-        totals: cartSummary,
+      const contact = {
+        firstName: firstNameValue,
+        lastName: lastNameValue,
+        address: addressValue,
+        city: cityValue,
+        email: emailValue,
       };
-      console.log(order);
-      sendOrder(order);
-      event.preventDefault();
+      sendOrder(contact, cartSummary);
     });
   } catch (error) {
     console.error(error);
