@@ -350,44 +350,46 @@ export const OrderDetails = (products) => {
   const btnContainer = document.createElement("div");
   const backToHomeBtn = document.createElement("button");
 
-  btnContainer.classList.add("confirmation__action");
-  backToHomeBtn.textContent = "Page d'accueil";
-  backToHomeBtn.setAttribute("id", "backToHomeBtn");
-  btnContainer.appendChild(backToHomeBtn);
+  if (cart) {
+    btnContainer.classList.add("confirmation__action");
+    backToHomeBtn.textContent = "Page d'accueil";
+    backToHomeBtn.setAttribute("id", "backToHomeBtn");
+    btnContainer.appendChild(backToHomeBtn);
 
-  firstLine.textContent = "Résumé :";
+    firstLine.textContent = "Résumé :";
 
-  list.append(firstLine);
+    list.append(firstLine);
 
-  cart.forEach((element) => {
-    const { id, color, quantity } = element;
+    cart.forEach((element) => {
+      const { id, color, quantity } = element;
 
-    const associatedElement = products.filter(
-      (product) => product._id === id
-    )[0];
+      const associatedElement = products.filter(
+        (product) => product._id === id
+      )[0];
 
-    const { name, price } = associatedElement;
+      const { name, price } = associatedElement;
 
-    const lineContent = `x${quantity} ${name} (${color}): ${formatToEuro(
-      price * quantity
+      const lineContent = `x${quantity} ${name} (${color}): ${formatToEuro(
+        price * quantity
+      )}`;
+
+      const line = document.createElement("li");
+      line.textContent = lineContent;
+
+      list.append(line);
+    });
+
+    const { totalQuantity, totalPrice } = getCartSummary();
+
+    const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
+      totalPrice
     )}`;
 
-    const line = document.createElement("li");
-    line.textContent = lineContent;
+    lastLine.textContent = lineTotal;
 
-    list.append(line);
-  });
+    list.append(lastLine);
 
-  const { totalQuantity, totalPrice } = getCartSummary();
-
-  const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
-    totalPrice
-  )}`;
-
-  lastLine.textContent = lineTotal;
-
-  list.append(lastLine);
-
-  listContainer.appendChild(list);
-  listContainer.appendChild(btnContainer);
+    listContainer.appendChild(list);
+    listContainer.appendChild(btnContainer);
+  }
 };

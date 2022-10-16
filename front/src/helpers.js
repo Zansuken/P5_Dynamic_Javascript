@@ -9,6 +9,7 @@ import {
 } from "./constants.js";
 import { Paragraph } from "./customComponents.js";
 
+// -- Requests -- //
 // Fetch products
 export const getProductsData = async () => {
   const response = await fetch(BASE_URL);
@@ -25,11 +26,16 @@ export const getSingleProductData = async (id) => {
   return product;
 };
 
-// Post order
+// POST order
 export const sendOrder = async (contact, cartSummary) => {
   const cart = getLocalStorage("cart");
+
+  // Build the products list
   const products = cart.map((product) => product.id);
+
+  // Build the order object
   const order = { contact, products, cartSummary };
+  // Send the POST request
   const response = await fetch(`${BASE_URL}/order`, {
     method: "POST",
     headers: {
@@ -38,17 +44,12 @@ export const sendOrder = async (contact, cartSummary) => {
     },
     body: JSON.stringify(order),
   });
-  getOrderId(response);
+  // Get the orderId received from the POST request => redirect to confirmation page
+  const responseOrder = await response.json();
+  redirectToConfirmationPage(responseOrder?.orderId);
 };
 
-// Get order id from POST and add it to local storage
-export const getOrderId = async (data) => {
-  const order = await data.json();
-  addOrderIdToLocalStorage("orderId", order?.orderId);
-  redirectToConfirmationPage(order?.orderId);
-};
-
-//generates random id;
+// Generates random id
 export const orderIdGenerator = () => {
   let s4 = () => {
     return Math.floor((1 + Math.random()) * 0x10000)
@@ -73,12 +74,12 @@ export const orderIdGenerator = () => {
 
 // Redirect to confirmation page
 export const redirectToConfirmationPage = (orderId) =>
-  window.location.replace(`confirmation.html?id=${orderId}`);
+  (window.location.href = `./confirmation.html?id=${orderId}`);
 
 // Redirect to home page
 export const redirectToHomePage = () => (window.location.href = "./index.html");
 
-// Local storage
+// -- Local storage -- //
 
 // Get local storage
 export const getLocalStorage = (key) => {
@@ -88,78 +89,97 @@ export const getLocalStorage = (key) => {
 
 // Add a single item to local storage
 export const addToLocalStorage = (key, value) => {
+  // No key => create/fill
   if (!getLocalStorage(key)) {
     const productList = [];
     productList.push(value);
     const convertedValue = JSON.stringify(productList);
     window.localStorage.setItem(key, convertedValue);
   } else {
+    // Existing key => update the key
+
+    // Get current key state
     const currentState = getLocalStorage(key);
     const productList = [...currentState];
 
     const { id, color, quantity } = value;
 
+    // Search for the right product to update
     const productToUpdate = productList.filter(
       (product) => product.id === id && product.color === color
     );
 
+    // Mock the object to send
     let currentProduct = {
       id,
       color,
       quantity,
     };
 
+    // If the product exists => update
     if (productToUpdate[0]) {
       productList.map((product, index) => {
+        // Loop through the products list from API
         if (
           product.id === productToUpdate[0].id &&
           product.color === productToUpdate[0].color
         ) {
+          // If match => update mocked object to send with previous state
           currentProduct = {
             ...productToUpdate[0],
             quantity: (
               Number(productToUpdate[0].quantity) + Number(value.quantity)
             ).toString(),
           };
+          // Replace related product with the updated one
           productList.splice(index, 1, currentProduct);
         }
       });
     } else {
+      // No product found => add directly to related key
       productList.push(value);
     }
+    // Convert to JSON format then store it
     const convertedValue = JSON.stringify(productList);
     window.localStorage.setItem(key, convertedValue);
   }
+  // Trigger the cartSummary update in local storage
   updateCartSummary(key);
 };
 
 // Remove a single item to local storage
 export const removeFromLocalStorage = (key, elementToRemove) => {
+  // Trigger only if the key exists
   if (getLocalStorage(key)) {
     const productList = getLocalStorage(key);
 
     const { id, color } = elementToRemove;
 
+    // Search targeted product
     const productToRemove = productList.filter(
       (product) => product.id === id && product.color === color
     );
 
+    // If the product exists => remove
     if (productToRemove[0]) {
       productList.map((product, index) => {
         if (
           product.id === productToRemove[0].id &&
           product.color === productToRemove[0].color
         ) {
+          // If match => remove
           productList.splice(index, 1);
         }
       });
+      // Convert to JSON format then update key
       window.localStorage.setItem(key, JSON.stringify(productList));
     }
+    // Trigger the cartSummary update in local storage
     updateCartSummary(key);
   }
 };
 
-// Change number of item
+// Change number of item (same as previous functions but for quantities)
 export const updateSingleItem = (key, elementToUpdate) => {
   if (getLocalStorage(key)) {
     const productList = getLocalStorage(key);
@@ -190,7 +210,7 @@ export const updateSingleItem = (key, elementToUpdate) => {
   }
 };
 
-// Update Cart Summary
+// Update Cart Summary (add/update a second key in local storage for cart summary)
 export const updateCartSummary = (key) => {
   const currentState = getLocalStorage(key);
   let totalQuantity = 0;
@@ -213,22 +233,10 @@ export const getCartSummary = () => {
   return JSON.parse(result);
 };
 
-// Add orderId to local storage
-export const addOrderIdToLocalStorage = (key, orderId) => {
-  window.localStorage.setItem(key, JSON.stringify(orderId));
-};
-
-// Remove orderId to local storage
-export const removeOrderIdToLocalStorage = (key) => {
-  if (getLocalStorage(key)) {
-    window.localStorage.removeItem(key);
-  }
-};
-
 // Clear local storage
 export const clearLocalStorage = () => window.localStorage.clear();
 
-// Concatenate children nodes
+// Concatenate children nodes (for custom components)
 export const addChildren = (node, children) => {
   Object.keys(children).forEach((key) => {
     node.append(children[key]);
@@ -271,7 +279,7 @@ export const startLoading = (node, isLoading) => {
 // Remove the loading spinner
 export const finishLoading = () => document.querySelector("#loader").remove();
 
-// Capitalize words
+// Capitalize strings
 export const capitalize = (string) => {
   const lowerCase = string.toLowerCase();
   return string.charAt(0).toUpperCase() + lowerCase.slice(1);
@@ -299,33 +307,41 @@ export const getRelatedInput = (label) =>
 // Check if given string includes numbers
 export const hasNumber = (string) => /\d/.test(string);
 
-// Check if given address exists
-export const isAddressValid = (address, city, addressLabel, value) => {
-  const url = geoApiURL(address);
-  fetch(url)
-    .then((response) => response.json())
-    .then((result) => {
-      if (result.features.length === 0) {
-        buildErrorMessage(addressLabel, value, "est incorrecte");
-      } else {
-        const foundCity = result.features[0].properties.city;
-        const foundNumber = result.features[0].properties.housenumber;
-        const foundStreet = result.features[0].properties.street;
+export const checkStreet = async (address, value) => {
+  const response = await isAddressValid(address, value);
+  return response;
+};
 
-        if (foundCity.toLowerCase() !== city.toLowerCase()) {
-          buildErrorMessage(
-            addressLabel,
-            value,
-            "n'existe pas dans la ville associée"
-          );
-        } else {
-          const addressNode = formNode().elements["address"];
-          removeFormErrorMessage(addressLabel);
-          addressNode.value = `${foundNumber} ${foundStreet}`;
-        }
+// Check if given address exists and send its status (with an API => https://www.geoapify.com/)
+export const isAddressValid = async (address, city) => {
+  // Build the request url with the given address input
+  const url = geoApiURL(address);
+
+  // Return all corresponding data
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.features.length === 0) {
+      return "unknownAddress";
+    } else {
+      const foundCity =
+        data.features[0].properties.city || data.features[0].properties.state;
+      const foundNumber = data.features[0].properties.housenumber;
+      const foundStreet = data.features[0].properties.street;
+
+      // Check if given city and found city is equivalent
+      if (foundCity?.toLowerCase() !== city.toLowerCase()) {
+        return "cityAndStreetNoMatch";
+      } else {
+        const addressNode = formNode().elements["address"];
+
+        addressNode.value = `${foundNumber} ${foundStreet}`;
+        return "";
       }
-    })
-    .catch((error) => console.error("error", error.message));
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
 };
 
 // Check if given string is an valid city
@@ -445,6 +461,7 @@ export const animateSnackbar = (id) => {
     iteration: 1,
   };
 
+  // Add animation to targeted element
   selectedNode(id).animate(animation, timing);
   setTimeout(function () {
     if (selectedNode(id)) {
@@ -460,6 +477,7 @@ export const formatToEuro = (number) =>
     currency: "EUR",
   }).format(number);
 
+// Change the display of CartState depending its previous state
 export const cartStateSwitch = ({
   elementToHide,
   elementToShow,
@@ -486,6 +504,7 @@ export const updateTotalPriceQuantityDisplayed = () => {
   let newTotalQuantity = 0;
   let newTotalPrice = 0;
 
+  // Calculate totals
   updatedCart?.forEach((item) => {
     newTotalQuantity = Number(newTotalQuantity) + Number(item.quantity);
     newTotalPrice = Number(newTotalPrice) + Number(item.totalPrice);

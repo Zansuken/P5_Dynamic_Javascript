@@ -7,11 +7,11 @@ import {
 } from "../constants.js";
 import {
   buildErrorMessage,
+  checkStreet,
   finishLoading,
   getLocalStorage,
   getProductsData,
   hasNumber,
-  isAddressValid,
   isValidCity,
   isValidEmail,
   removeFormErrorMessage,
@@ -36,15 +36,8 @@ if (URL.includes("cart")) {
     const form = formNode();
 
     form.addEventListener("submit", (event) => {
+      event.preventDefault();
       const { elements } = form;
-
-      const allInputs = {
-        firstNameInput: elements["firstName"],
-        lastNameInput: elements["lastName"],
-        addressInput: elements["address"],
-        cityInput: elements["city"],
-        emailInput: elements["email"],
-      };
 
       const allLabels = {
         firstNameLabel: elements["firstName"].name,
@@ -63,14 +56,6 @@ if (URL.includes("cart")) {
       };
 
       const {
-        firstNameInput,
-        lastNameInput,
-        addressInput,
-        cityInput,
-        emailInput,
-      } = allInputs;
-
-      const {
         firstNameLabel,
         lastNameLabel,
         addressLabel,
@@ -86,58 +71,6 @@ if (URL.includes("cart")) {
         emailValue,
       } = allValues;
 
-      Object.values(allInputs).forEach((input) => {
-        const { value } = input;
-        switch (input) {
-          case firstNameInput:
-            if (hasNumber(value)) {
-              buildErrorMessage(firstNameLabel, value, "contiens des chiffres");
-              event.preventDefault();
-            } else {
-              removeFormErrorMessage(firstNameLabel);
-            }
-            break;
-          case lastNameInput:
-            if (hasNumber(value)) {
-              buildErrorMessage(lastNameLabel, value, "contiens des chiffres");
-              event.preventDefault();
-            } else {
-              removeFormErrorMessage(lastNameLabel);
-            }
-            break;
-          case addressInput:
-            if (cityInput.value) {
-              isAddressValid(
-                value,
-                cityInput.value,
-                addressLabel,
-                value,
-                addressInput
-              );
-            }
-            break;
-          case cityInput:
-            if (!isValidCity(value)) {
-              buildErrorMessage(cityLabel, value, "n'est pas une ville valide");
-              event.preventDefault();
-            } else {
-              removeFormErrorMessage(cityLabel);
-            }
-            break;
-          case emailInput:
-            // Overkill checks because email input works well
-            if (!isValidEmail(value)) {
-              buildErrorMessage(emailLabel, value, "n'est pas un email valide");
-              event.preventDefault();
-            } else {
-              removeFormErrorMessage(emailLabel);
-            }
-            break;
-
-          default:
-            break;
-        }
-      });
       const contact = {
         firstName: firstNameValue,
         lastName: lastNameValue,
@@ -145,7 +78,72 @@ if (URL.includes("cart")) {
         city: cityValue,
         email: emailValue,
       };
-      sendOrder(contact, cartSummary);
+
+      // Wait the result of the address check from GeoApi to trigger or not submit
+      Promise.all([checkStreet(addressValue, cityValue)]).then((result) => {
+        let formIsValid = true;
+        if (result[0] === "unknownAddress") {
+          buildErrorMessage(
+            addressLabel,
+            addressValue,
+            "n'est pas une adresse connue"
+          );
+        }
+        if (result[0] === "cityAndStreetNoMatch") {
+          buildErrorMessage(
+            addressLabel,
+            addressValue,
+            "n'existe pas dans la ville entrée"
+          );
+        }
+
+        if (hasNumber(firstNameValue)) {
+          buildErrorMessage(
+            firstNameLabel,
+            firstNameValue,
+            "contiens des chiffres"
+          );
+          formIsValid = false;
+        } else {
+          removeFormErrorMessage(firstNameLabel);
+        }
+
+        if (hasNumber(lastNameValue)) {
+          buildErrorMessage(
+            lastNameLabel,
+            lastNameValue,
+            "contiens des chiffres"
+          );
+          formIsValid = false;
+        } else {
+          removeFormErrorMessage(lastNameLabel);
+        }
+
+        if (!isValidCity(cityValue)) {
+          buildErrorMessage(cityLabel, cityValue, "n'est pas une ville valide");
+          formIsValid = false;
+        } else {
+          removeFormErrorMessage(cityLabel);
+        }
+
+        // Overkill checks because email input works well
+        if (!isValidEmail(emailValue)) {
+          buildErrorMessage(
+            emailLabel,
+            emailValue,
+            "n'est pas un email valide"
+          );
+          formIsValid = false;
+        } else {
+          removeFormErrorMessage(emailLabel);
+        }
+
+        if (result[0] === "" && formIsValid) {
+          removeFormErrorMessage(addressLabel);
+          sendOrder(contact, cartSummary);
+          form.submit();
+        }
+      });
     });
   } catch (error) {
     console.error(error);

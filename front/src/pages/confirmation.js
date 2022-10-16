@@ -15,7 +15,7 @@ if (URL.includes("confirmation")) {
     const orderId = searchOrderIdParams.get("id");
     orderIdNode().innerText = orderId;
     OrderDetails(products);
-    redirectToHomeBtnNode().addEventListener("click", () => {
+    redirectToHomeBtnNode()?.addEventListener("click", () => {
       clearLocalStorage();
       redirectToHomePage();
     });
