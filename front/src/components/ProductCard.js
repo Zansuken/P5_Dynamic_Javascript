@@ -1,4 +1,10 @@
-import { Article, Image, Link, Paragraph, Title } from "../customComponents.js";
+import {
+  Article,
+  Image,
+  Link,
+  Paragraph,
+  Title,
+} from "./customComponents/customComponents.js";
 
 const ProductCard = (props = { data, alt, href, img, name, description }) => {
   const { alt, href, img, name, description } = props;

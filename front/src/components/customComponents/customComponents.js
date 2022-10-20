@@ -3,11 +3,11 @@ import {
   currentCartStateDetailsNode,
   currentCartStateIconNode,
   pageNode,
-} from "./constants.js";
-import { addChildren } from "./helpers/builders.js";
-import { capitalize, formatToEuro } from "./helpers/other.js";
-import { getLocalStorage, getCartSummary } from "./helpers/requests.js";
-import { animateSnackbar } from "./helpers/animations.js";
+} from "../../constants.js";
+import { addChildren } from "../../helpers/builders.js";
+import { capitalize, formatToEuro } from "../../helpers/other.js";
+import { getLocalStorage, getCartSummary } from "../../helpers/requests.js";
+import { animateSnackbar } from "../../helpers/animations.js";
 
 // Generate an anchor element
 export const Link = (props = { href }, children) => {

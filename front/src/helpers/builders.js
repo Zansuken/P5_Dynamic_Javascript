@@ -1,5 +1,5 @@
 import { displayedErrorNode } from "../constants.js";
-import { Paragraph } from "../customComponents.js";
+import { Paragraph } from "../components/customComponents/customComponents.js";
 import { getRelatedInput } from "../constants.js";
 
 // -- Builders -- //

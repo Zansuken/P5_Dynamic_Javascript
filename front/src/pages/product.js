@@ -12,7 +12,11 @@ import {
   titleNode,
   URL,
 } from "../constants.js";
-import { Image, SnackBar, Option } from "../customComponents.js";
+import {
+  Image,
+  SnackBar,
+  Option,
+} from "../components/customComponents/customComponents.js";
 import { animateErrorMessage } from "../helpers/animations.js";
 import {
   errorMessageGenerator,

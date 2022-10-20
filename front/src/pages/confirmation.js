@@ -1,5 +1,5 @@
 import { orderIdNode, redirectToHomeBtnNode, URL } from "../constants.js";
-import { OrderDetails } from "../customComponents.js";
+import { OrderDetails } from "../components/customComponents/customComponents.js";
 import {
   getProductsData,
   redirectToHomePage,

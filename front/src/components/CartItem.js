@@ -5,7 +5,7 @@ import {
   Input,
   Paragraph,
   Title,
-} from "../customComponents.js";
+} from "./customComponents/customComponents.js";
 import { cartContainerNode, singleTotalPriceNode } from "../constants.js";
 import {
   clearLocalStorage,

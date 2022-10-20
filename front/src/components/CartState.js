@@ -3,7 +3,10 @@ import {
   currentCartStateIconNode,
   URL,
 } from "../constants.js";
-import { CartStateDetails, CartStateIcon } from "../customComponents.js";
+import {
+  CartStateDetails,
+  CartStateIcon,
+} from "./customComponents/customComponents.js";
 import { cartStateSwitch } from "../helpers/builders.js";
 import {
   getProductsData,
