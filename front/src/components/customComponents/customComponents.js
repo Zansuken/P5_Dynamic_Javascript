@@ -9,6 +9,20 @@ import { capitalize, formatToEuro } from "../../helpers/other.js";
 import { getLocalStorage, getCartSummary } from "../../helpers/requests.js";
 import { animateSnackbar } from "../../helpers/animations.js";
 
+// These functions tries to imitate react functional components with limitation.
+// It accepts arguments as props and children.
+// For some of the following "components" missing important/mandatory props show a warning/error in the console.
+
+// The common pattern is the following =>
+// 1. Use the props to the the supposed job of the component.
+// 2. Create the base DOM node needed.
+// 3. Add attributes and identifier if needed.
+// 4. If the component accepts children, insert them.
+// 5. Returns the builded component.
+
+// To know:
+// Some of the following components are meant to be generic, some to be more specific.
+
 // Generate an anchor element
 export const Link = (props = { href }, children) => {
   const { href } = props;
