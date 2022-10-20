@@ -118,7 +118,7 @@ export const addToLocalStorage = (key, value) => {
 
     // If the product exists => update
     if (productToUpdate[0]) {
-      productList.map((product, index) => {
+      productList.forEach((product, index) => {
         // Loop through the products list from API
         if (
           product.id === productToUpdate[0].id &&
@@ -162,7 +162,7 @@ export const removeFromLocalStorage = (key, elementToRemove) => {
 
     // If the product exists => remove
     if (productToRemove[0]) {
-      productList.map((product, index) => {
+      productList.forEach((product, index) => {
         if (
           product.id === productToRemove[0].id &&
           product.color === productToRemove[0].color
@@ -191,7 +191,7 @@ export const updateSingleItem = (key, elementToUpdate) => {
     );
 
     if (productToUpdate[0]) {
-      productList.map((product, index) => {
+      productList.forEach((product, index) => {
         if (
           product.id === productToUpdate[0].id &&
           product.color === productToUpdate[0].color
@@ -413,48 +413,21 @@ export const animateErrorMessage = (id) => {
 
 // Animate snackbar
 export const animateSnackbar = (id) => {
-  const animation = [
-    {
-      bottom: "-30px",
-      opacity: 0,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "15px",
-      opacity: 1,
-    },
-    {
-      bottom: "-30px",
-      opacity: 0,
-    },
-  ];
+  const animation = [];
+  // Generate animation
+  for (let index = 0; index < 10; index++) {
+    if (index === 0 || index === 9) {
+      animation.push({
+        bottom: "-30px",
+        opacity: 0,
+      });
+    } else {
+      animation.push({
+        bottom: "15px",
+        opacity: 1,
+      });
+    }
+  }
 
   const timing = {
     duration: 5000,
@@ -486,13 +459,17 @@ export const cartStateSwitch = ({
   products,
   isDefaultState,
 }) => {
+  // If element is displayed we add a listener on click
   elementToHide?.addEventListener("click", () => {
+    // Add a class that changes the display prop to "none"
     elementToHide?.classList.add("hide");
+    // Depending on which state we show only the icon or the cart details
     if (isDefaultState) {
       elementGenerator(cart, products);
     } else {
       elementGenerator(cart.length, cart, products);
     }
+    // Add a class that changes the display prop to "flex" on top of "hide" className
     elementToShow?.classList.add("show");
   });
 };
