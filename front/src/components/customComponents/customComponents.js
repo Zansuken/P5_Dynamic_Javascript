@@ -277,6 +277,10 @@ export const SnackBar = (message, type) => {
     snackbar.classList.add("snackbarSuccess");
   }
 
+  if (type === "error") {
+    snackbar.classList.add("snackbarError");
+  }
+
   pageNode().append(snackbar);
   animateSnackbar("snackbar");
 };

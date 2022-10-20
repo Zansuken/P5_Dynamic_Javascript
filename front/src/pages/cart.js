@@ -22,26 +22,45 @@ import {
   getLocalStorage,
 } from "../helpers/requests.js";
 
+// Checks if we are on the cart page.
 if (URL.includes("cart")) {
   try {
+    // Add a loading spinner.
     startLoading(cartContainerNode(), true);
+
+    // Get the cart and the cartSummary from local storage.
     const cart = getLocalStorage("cart");
     const cartSummary = getLocalStorage("cartSummary");
+
+    // Fetch all the products from the API.
     const products = await getProductsData();
+
+    // Removes the "disabled" attribute from the submit button.
     submitBtnNode().removeAttribute("disabled");
+
+    // If the cart exists, builds the list to display.
     if (cart) {
       CartList({ cart, products });
     } else {
+      // If the cart doesn't exists add a "disabled" attribute to the submit button.
       submitBtnNode().setAttribute("disabled", "");
     }
+
+    // Removes the loading spinner.
     finishLoading();
 
+    // Select the form element.
     const form = formNode();
 
+    // Adds a "submit" type listener to the form.
     form.addEventListener("submit", (event) => {
+      // Stops default event behavior when submit.
       event.preventDefault();
+
+      // Extracts children nodes from the form.
       const { elements } = form;
 
+      // Structures the different labels in an object.
       const allLabels = {
         firstNameLabel: elements["firstName"].name,
         lastNameLabel: elements["lastName"].name,
@@ -50,6 +69,7 @@ if (URL.includes("cart")) {
         emailLabel: elements["email"].name,
       };
 
+      // Structures the different values in an object.
       const allValues = {
         firstNameValue: elements["firstName"].value,
         lastNameValue: elements["lastName"].value,
@@ -58,6 +78,7 @@ if (URL.includes("cart")) {
         emailValue: elements["email"].value,
       };
 
+      // Extracts the labels with destructuring.
       const {
         firstNameLabel,
         lastNameLabel,
@@ -66,6 +87,7 @@ if (URL.includes("cart")) {
         emailLabel,
       } = allLabels;
 
+      // Extracts the values with destructuring.
       const {
         firstNameValue,
         lastNameValue,
@@ -74,6 +96,7 @@ if (URL.includes("cart")) {
         emailValue,
       } = allValues;
 
+      // Builds the contact object to send.
       const contact = {
         firstName: firstNameValue,
         lastName: lastNameValue,
@@ -82,7 +105,8 @@ if (URL.includes("cart")) {
         email: emailValue,
       };
 
-      // Wait the result of the address check from GeoApi to trigger or not submit
+      // Wait the result of the address check from GeoApi to trigger or not submit.
+      // Each check has its own error message.
       Promise.all([checkStreet(addressValue, cityValue)]).then((result) => {
         let formIsValid = true;
         if (result[0] === "unknownAddress") {

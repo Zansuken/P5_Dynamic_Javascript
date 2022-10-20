@@ -235,6 +235,24 @@ footer .footerSecondary {
   margin: 0;
 }
 
+.snackbarError {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: fit-content;
+  height: 15px;
+  background-color: #cd2026;
+  color: white;
+  border-radius: 7px;
+  font-size: 12px;
+  padding: 7px 12px;
+  opacity: 0;
+}
+
+.snackbarError p {
+  margin: 0;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
