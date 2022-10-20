@@ -13,13 +13,15 @@ import {
   URL,
 } from "../constants.js";
 import { Image, SnackBar, Option } from "../customComponents.js";
+import { animateErrorMessage } from "../helpers/animations.js";
 import {
-  addToLocalStorage,
-  animateErrorMessage,
   errorMessageGenerator,
-  getSingleProductData,
   removeErrorMessage,
-} from "../helpers.js";
+} from "../helpers/builders.js";
+import {
+  getSingleProductData,
+  addToLocalStorage,
+} from "../helpers/requests.js";
 
 if (URL.includes("product")) {
   const queryString = window.location.search;

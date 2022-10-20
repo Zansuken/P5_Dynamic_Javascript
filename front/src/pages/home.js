@@ -1,7 +1,8 @@
 import { updateCartIcon } from "../components/CartState.js";
 import ProductCard from "../components/ProductCard.js";
 import { productsContainerNode, URL } from "../constants.js";
-import { finishLoading, getProductsData, startLoading } from "../helpers.js";
+import { finishLoading, startLoading } from "../helpers/animations.js";
+import { getProductsData } from "../helpers/requests.js";
 
 if (URL.includes("index")) {
   try {

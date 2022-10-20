@@ -45,3 +45,5 @@ export const confirmationContainerNode = () =>
   document.querySelector(".confirmation");
 export const redirectToHomeBtnNode = () =>
   document.getElementById("backToHomeBtn");
+export const getRelatedInput = (label) =>
+  document.querySelector(`#${label}ErrorMsg`);

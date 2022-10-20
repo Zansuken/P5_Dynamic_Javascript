@@ -4,12 +4,12 @@ import {
   URL,
 } from "../constants.js";
 import { CartStateDetails, CartStateIcon } from "../customComponents.js";
+import { cartStateSwitch } from "../helpers/builders.js";
 import {
-  cartStateSwitch,
+  getProductsData,
   getCartSummary,
   getLocalStorage,
-  getProductsData,
-} from "../helpers.js";
+} from "../helpers/requests.js";
 
 export const updateCartIcon = async () => {
   if (!URL.includes("cart")) {

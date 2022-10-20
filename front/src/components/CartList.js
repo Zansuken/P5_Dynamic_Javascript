@@ -4,7 +4,8 @@ import {
   globalTotalPriceNode,
   globalTotalQuantityNode,
 } from "../constants.js";
-import { formatToEuro, getCartSummary } from "../helpers.js";
+import { formatToEuro } from "../helpers/other.js";
+import { getCartSummary } from "../helpers/requests.js";
 
 const CartList = (props = { cart, products }) => {
   const { cart, products } = props;

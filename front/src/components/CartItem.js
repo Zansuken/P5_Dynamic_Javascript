@@ -13,7 +13,7 @@ import {
   removeFromLocalStorage,
   updateSingleItem,
   updateTotalPriceQuantityDisplayed,
-} from "../helpers.js";
+} from "../helpers/requests.js";
 
 const CartItem = (props = { classes }) => {
   const {

@@ -1,10 +1,10 @@
 import { orderIdNode, redirectToHomeBtnNode, URL } from "../constants.js";
 import { OrderDetails } from "../customComponents.js";
 import {
-  clearLocalStorage,
   getProductsData,
   redirectToHomePage,
-} from "../helpers.js";
+  clearLocalStorage,
+} from "../helpers/requests.js";
 
 if (URL.includes("confirmation")) {
   try {

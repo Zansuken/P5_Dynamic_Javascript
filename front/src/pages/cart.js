@@ -6,18 +6,21 @@ import {
   URL,
 } from "../constants.js";
 import {
-  buildErrorMessage,
   checkStreet,
-  finishLoading,
-  getLocalStorage,
-  getProductsData,
   hasNumber,
   isValidCity,
   isValidEmail,
+} from "../helpers/validations.js";
+import { startLoading, finishLoading } from "../helpers/animations.js";
+import {
+  buildErrorMessage,
   removeFormErrorMessage,
+} from "../helpers/builders.js";
+import {
+  getProductsData,
   sendOrder,
-  startLoading,
-} from "../helpers.js";
+  getLocalStorage,
+} from "../helpers/requests.js";
 
 if (URL.includes("cart")) {
   try {
