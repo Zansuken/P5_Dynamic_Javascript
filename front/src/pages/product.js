@@ -1,12 +1,14 @@
 import { updateCartIcon } from "../components/CartState.js";
 import {
   addToCartBtnNode,
+  colorErrorNode,
   colorInputContainerNode,
   colorsInputNode,
   currentCartStateDetailsNode,
   descriptionNode,
   imgContainerNode,
   priceNode,
+  quantityErrorNode,
   quantityInputContainerNode,
   quantityInputNode,
   titleNode,
@@ -59,7 +61,7 @@ if (URL.includes("product")) {
     let dataToSave = {
       id: productId,
       color: "",
-      quantity: "",
+      quantity: 1,
       price: productPrice,
     };
 
@@ -105,8 +107,12 @@ if (URL.includes("product")) {
       // Updates the object to save with a quantity property.
       dataToSave = { ...dataToSave, quantity: "" };
 
-      // Generates error message if no color is selected.
-      if (!event.target.value || event.target.value < 1) {
+      const value = Number(event.target.value);
+
+      // Generates error message if no quantity is selected.
+      console.log("hors if: ", value);
+      if (!value || value < 1 || value > 100) {
+        console.log(value);
         errorMessageGenerator({
           node: quantityInputContainerNode(),
           id: "quantityError",
@@ -116,13 +122,13 @@ if (URL.includes("product")) {
       }
 
       // Removes the error message if a color is selected.
-      if (event.target.value && event.target.value >= 1) {
+      if (value && value >= 1 && value <= 100) {
         removeErrorMessage("quantityError");
 
         // Updates the object to save with its previous state then the quantity selected.
         dataToSave = {
           ...dataToSave,
-          quantity: event.target.value,
+          quantity: value,
         };
       }
     });
@@ -130,6 +136,34 @@ if (URL.includes("product")) {
     // Adds a "click" event listener the the addToCartBtn DOM element.
     addToCartBtnNode().addEventListener("click", () => {
       // Checks if the color or the quantity is missing. If so, animates the concerned messages related.
+
+      if (!quantityErrorNode()) {
+        // Generates error message if no quantity is selected.
+        if (
+          !dataToSave.quantity ||
+          dataToSave.quantity < 1 ||
+          dataToSave.quantity > 100
+        ) {
+          errorMessageGenerator({
+            node: quantityInputContainerNode(),
+            id: "quantityError",
+            type: "error",
+            value: "Le nombre de produit à ajouter est manquant ou incorrect",
+          });
+        }
+      }
+      if (!colorErrorNode()) {
+        // Generates error message if no color is selected.
+        if (!dataToSave.color) {
+          errorMessageGenerator({
+            node: colorInputContainerNode(),
+            id: "colorError",
+            type: "error",
+            value: "La sélection d'une couleur est obligatoire",
+          });
+        }
+      }
+
       if (!dataToSave.color || !dataToSave.quantity) {
         if (dataToSave.quantity) {
           animateErrorMessage("colorError");

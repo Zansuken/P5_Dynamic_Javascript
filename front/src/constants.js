@@ -47,3 +47,5 @@ export const redirectToHomeBtnNode = () =>
   document.getElementById("backToHomeBtn");
 export const getRelatedInput = (label) =>
   document.querySelector(`#${label}ErrorMsg`);
+export const colorErrorNode = () => document.getElementById("colorError");
+export const quantityErrorNode = () => document.getElementById("quantityError");

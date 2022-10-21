@@ -4,11 +4,17 @@ import {
   getProductsData,
   redirectToHomePage,
   clearLocalStorage,
+  getLocalStorage,
 } from "../helpers/requests.js";
 
 // Checks if we are on the confirmation page.
 if (URL.includes("confirmation")) {
   try {
+    const cart = getLocalStorage("cart");
+
+    if (!cart) {
+      redirectToHomePage();
+    }
     // Fetch all the products from the API.
     const products = await getProductsData();
 
@@ -26,11 +32,11 @@ if (URL.includes("confirmation")) {
 
     // Builds the OrderDetails component.
     OrderDetails(products);
+    clearLocalStorage();
 
     // Selects the redirectToHomeBtn DOM element and add a "click" event listener on it.
     redirectToHomeBtnNode().addEventListener("click", () => {
       // Clears local storage and redirect to the home page.
-      clearLocalStorage();
       redirectToHomePage();
     });
   } catch (error) {
