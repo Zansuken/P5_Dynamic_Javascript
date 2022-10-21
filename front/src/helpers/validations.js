@@ -42,9 +42,24 @@ export const isAddressValid = async (address, city) => {
   }
 };
 
-// Check if given string is an valid city
-export const isValidCity = (string) =>
-  /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/.test(string);
+export const isValidCity = async (city) => {
+  // Build the request url with the given city input
+  const url = geoApiURL(city);
+
+  // Return all corresponding data
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const foundCities = data.features.map((element) => element.properties.city);
+    if (!foundCities.includes(city)) {
+      return "unknownCity";
+    } else {
+      return "";
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 
 // Check if given string is an email
 export const isValidEmail = (string) =>

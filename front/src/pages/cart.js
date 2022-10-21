@@ -107,7 +107,10 @@ if (URL.includes("cart")) {
 
       // Wait the result of the address check from GeoApi to trigger or not submit.
       // Each check has its own error message.
-      Promise.all([checkStreet(addressValue, cityValue)]).then((result) => {
+      Promise.all([
+        checkStreet(addressValue, cityValue),
+        isValidCity(cityValue),
+      ]).then((result) => {
         let formIsValid = true;
         if (result[0] === "unknownAddress") {
           buildErrorMessage(
@@ -146,7 +149,7 @@ if (URL.includes("cart")) {
           removeFormErrorMessage(lastNameLabel);
         }
 
-        if (!isValidCity(cityValue)) {
+        if (result[1] === "unknownCity") {
           buildErrorMessage(cityLabel, cityValue, "n'est pas une ville valide");
           formIsValid = false;
         } else {
