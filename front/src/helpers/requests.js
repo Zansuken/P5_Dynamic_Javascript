@@ -3,6 +3,7 @@ import {
   globalTotalPriceNode,
   globalTotalQuantityNode,
 } from "../constants.js";
+import { formatToEuro } from "./other.js";
 
 // -- Requests -- //
 
