@@ -62,7 +62,6 @@ if (URL.includes("product")) {
       id: productId,
       color: "",
       quantity: 1,
-      price: productPrice,
     };
 
     // Selects and builds the image.
@@ -110,9 +109,7 @@ if (URL.includes("product")) {
       const value = Number(event.target.value);
 
       // Generates error message if no quantity is selected.
-      console.log("hors if: ", value);
       if (!value || value < 1 || value > 100) {
-        console.log(value);
         errorMessageGenerator({
           node: quantityInputContainerNode(),
           id: "quantityError",
@@ -182,14 +179,8 @@ if (URL.includes("product")) {
       // Generates a SnackBar on the bottom right of the page to confirm the item has been added.
       SnackBar("Item added to your cart!", "success");
 
-      // Extracts price/quantity from the object to save.
-      const { price, quantity } = dataToSave;
-
       // Updates the local storage with the new product.
-      addToLocalStorage("cart", {
-        ...dataToSave,
-        totalPrice: price * quantity,
-      });
+      addToLocalStorage("cart", dataToSave);
 
       // Resets the top right icon.
       currentCartStateDetailsNode()?.remove();

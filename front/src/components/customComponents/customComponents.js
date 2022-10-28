@@ -6,7 +6,12 @@ import {
 } from "../../constants.js";
 import { addChildren } from "../../helpers/builders.js";
 import { capitalize, formatToEuro } from "../../helpers/other.js";
-import { getLocalStorage, getCartSummary } from "../../helpers/requests.js";
+import {
+  getLocalStorage,
+  getCartSummary,
+  getTotalPrice,
+  redirectToHomePage,
+} from "../../helpers/requests.js";
 import { animateSnackbar } from "../../helpers/animations.js";
 
 // These functions tries to imitate react functional components with limitation.
@@ -300,7 +305,7 @@ export const CartStateIcon = (quantity) => {
   pageNode().append(container);
 };
 
-export const CartStateDetails = (cart, products) => {
+export const CartStateDetails = async (cart, products) => {
   currentCartStateDetailsNode()?.remove();
 
   const list = document.createElement("ul");
@@ -331,7 +336,9 @@ export const CartStateDetails = (cart, products) => {
     list.append(line);
   });
 
-  const { totalQuantity, totalPrice } = getCartSummary();
+  const { totalQuantity } = getCartSummary();
+
+  const totalPrice = await getTotalPrice();
 
   const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
     totalPrice
@@ -354,7 +361,7 @@ export const CartStateDetails = (cart, products) => {
   });
 };
 
-export const OrderDetails = (products) => {
+export const OrderDetails = async (products) => {
   const cart = getLocalStorage("cart");
 
   const listContainer = confirmationContainerNode().childNodes[1];
@@ -364,12 +371,17 @@ export const OrderDetails = (products) => {
   const btnContainer = document.createElement("div");
   const backToHomeBtn = document.createElement("button");
 
-  if (cart) {
-    btnContainer.classList.add("confirmation__action");
-    backToHomeBtn.textContent = "Page d'accueil";
-    backToHomeBtn.setAttribute("id", "backToHomeBtn");
-    btnContainer.appendChild(backToHomeBtn);
+  btnContainer.classList.add("confirmation__action");
+  backToHomeBtn.textContent = "Page d'accueil";
+  backToHomeBtn.setAttribute("id", "backToHomeBtn");
+  btnContainer.appendChild(backToHomeBtn);
 
+  // Selects the redirectToHomeBtn DOM element and add a "click" event listener on it.
+  backToHomeBtn.addEventListener("click", () => {
+    // Clears local storage and redirect to the home page.
+    redirectToHomePage();
+  });
+  if (cart) {
     firstLine.textContent = "Résumé :";
 
     list.append(firstLine);
@@ -393,7 +405,9 @@ export const OrderDetails = (products) => {
       list.append(line);
     });
 
-    const { totalQuantity, totalPrice } = getCartSummary();
+    const { totalQuantity } = getCartSummary();
+
+    const totalPrice = await getTotalPrice();
 
     const lineTotal = `${totalQuantity} articles pour ${formatToEuro(
       totalPrice

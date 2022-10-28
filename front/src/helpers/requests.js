@@ -158,7 +158,7 @@ export const updateSingleItem = (key, elementToUpdate) => {
   if (getLocalStorage(key)) {
     const productList = getLocalStorage(key);
 
-    const { id, color, quantity, price } = elementToUpdate;
+    const { id, color, quantity } = elementToUpdate;
 
     const productToUpdate = productList.filter(
       (product) => product.id === id && product.color === color
@@ -173,7 +173,6 @@ export const updateSingleItem = (key, elementToUpdate) => {
           const updatedProduct = {
             ...productToUpdate[0],
             quantity,
-            totalPrice: quantity * price,
           };
           productList.splice(index, 1, updatedProduct);
         }
@@ -188,16 +187,11 @@ export const updateSingleItem = (key, elementToUpdate) => {
 export const updateCartSummary = (key) => {
   const currentState = getLocalStorage(key);
   let totalQuantity = 0;
-  let totalPrice = 0;
   currentState.forEach((item) => {
-    const { quantity, price } = item;
+    const { quantity } = item;
     totalQuantity = totalQuantity + Number(quantity);
-    totalPrice = totalPrice + Number(price) * quantity;
   });
-  window.localStorage.setItem(
-    "cartSummary",
-    JSON.stringify({ totalPrice, totalQuantity })
-  );
+  window.localStorage.setItem("cartSummary", JSON.stringify({ totalQuantity }));
 };
 
 // Get Cart Summary
@@ -211,18 +205,41 @@ export const getCartSummary = () => {
 export const clearLocalStorage = () => window.localStorage.clear();
 
 // Update totalPrice and totalQuantity displayed values
-export const updateTotalPriceQuantityDisplayed = () => {
+export const updateTotalPriceQuantityDisplayed = async () => {
   const updatedCart = getLocalStorage("cart");
+  const newTotalPrice = await getTotalPrice();
 
   let newTotalQuantity = 0;
-  let newTotalPrice = 0;
 
   // Calculate totals
   updatedCart?.forEach((item) => {
     newTotalQuantity = Number(newTotalQuantity) + Number(item.quantity);
-    newTotalPrice = Number(newTotalPrice) + Number(item.totalPrice);
   });
 
   globalTotalQuantityNode().innerText = newTotalQuantity;
   globalTotalPriceNode().innerText = formatToEuro(newTotalPrice);
+};
+
+// Get total price
+export const getTotalPrice = async () => {
+  try {
+    const cart = getLocalStorage("cart");
+    const products = await getProductsData();
+    let totalPrice = 0;
+
+    if (cart) {
+      cart.forEach((item) => {
+        const { quantity, id } = item;
+        const associatedElement = products.filter(
+          (product) => product._id === id
+        )[0];
+
+        const { price } = associatedElement;
+        totalPrice = Number(totalPrice) + Number(price) * Number(quantity);
+      });
+    }
+    return totalPrice;
+  } catch (error) {
+    console.error(error.message);
+  }
 };

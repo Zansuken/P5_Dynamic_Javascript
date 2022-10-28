@@ -5,7 +5,7 @@ import {
   globalTotalQuantityNode,
 } from "../constants.js";
 import { formatToEuro } from "../helpers/other.js";
-import { getCartSummary } from "../helpers/requests.js";
+import { getCartSummary, getTotalPrice } from "../helpers/requests.js";
 
 // Generate the CartList component.
 // Steps:
@@ -18,7 +18,7 @@ import { getCartSummary } from "../helpers/requests.js";
 // 7. Extracts the overall totals (quantity and price) of the "cartSummary" key in local storage.
 // 8. Updates the displayed text of the concerned elements in the DOM (and format the price to €).
 
-const CartList = (props = { cart, products }) => {
+const CartList = async (props = { cart, products }) => {
   // 1.
   const { cart, products } = props;
 
@@ -31,6 +31,10 @@ const CartList = (props = { cart, products }) => {
   cart.forEach((item) => {
     // 4.
     if (item.id) {
+      const relatedItem = products.filter(
+        (product) => product._id === item.id
+      )[0];
+
       // 5.
       const cartItem = CartItem({
         classes: {
@@ -47,7 +51,7 @@ const CartList = (props = { cart, products }) => {
         itemId: item.id,
         itemColor: item.color,
         itemQuantity: item.quantity,
-        itemPrice: item.price,
+        itemPrice: relatedItem.price,
         products,
         cart,
       });
@@ -57,9 +61,11 @@ const CartList = (props = { cart, products }) => {
   });
 
   // 7.
-  const { totalQuantity, totalPrice } = getCartSummary();
+  const { totalQuantity } = getCartSummary();
 
   // 8.
+  const totalPrice = await getTotalPrice();
+
   globalTotalPriceNode().innerText = formatToEuro(totalPrice);
   globalTotalQuantityNode().innerText = totalQuantity;
 };

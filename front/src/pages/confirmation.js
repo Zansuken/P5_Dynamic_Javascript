@@ -1,8 +1,7 @@
-import { orderIdNode, redirectToHomeBtnNode, URL } from "../constants.js";
+import { orderIdNode, URL } from "../constants.js";
 import { OrderDetails } from "../components/customComponents/customComponents.js";
 import {
   getProductsData,
-  redirectToHomePage,
   clearLocalStorage,
   getLocalStorage,
 } from "../helpers/requests.js";
@@ -33,12 +32,6 @@ if (URL.includes("confirmation")) {
     // Builds the OrderDetails component.
     OrderDetails(products);
     clearLocalStorage();
-
-    // Selects the redirectToHomeBtn DOM element and add a "click" event listener on it.
-    redirectToHomeBtnNode().addEventListener("click", () => {
-      // Clears local storage and redirect to the home page.
-      redirectToHomePage();
-    });
   } catch (error) {
     console.error(error.message);
   }

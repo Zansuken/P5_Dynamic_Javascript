@@ -90,7 +90,7 @@ const CartItem = (props = { classes }) => {
   cart?.forEach((item) => {
     if (item.id) {
       globalTotalPrice =
-        Number(globalTotalPrice) + Number(item.price) * Number(item.quantity);
+        Number(globalTotalPrice) + Number(itemPrice) * Number(item.quantity);
       globalTotalQuantity = Number(globalTotalQuantity) + Number(item.quantity);
     }
   });
