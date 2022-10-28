@@ -91,10 +91,10 @@ h2 {
   display: flex;
   margin: 0;
   line-height: 130px;
+  gap: 50px;
 }
 .menu nav ul li {
   list-style: none;
-  margin-left: 50px;
   color: var(--text-color);
 }
 .menu nav ul li:hover {
